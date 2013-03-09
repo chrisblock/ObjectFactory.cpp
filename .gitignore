@@ -1,0 +1,15 @@
+*.user
+*.suo
+*.dotCover
+*.sdf
+*.opensdf
+
+_Resharper.*/
+
+ipch/
+bin/
+obj/
+Debug/
+Release/
+
+Thumbs.db

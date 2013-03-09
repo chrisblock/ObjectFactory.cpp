@@ -1,0 +1,1 @@
+A C++ implementation of a rudimentary IoC container, based somewhat on the StructureMap public API for familiarity's sake.

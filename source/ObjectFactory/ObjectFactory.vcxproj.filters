@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{c229c432-18d5-474d-9bd8-c7a01f4b3edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Impl">
+      <UniqueIdentifier>{eebe37b5-f289-43b7-9977-4ac2dda43971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InstanceFactories">
+      <UniqueIdentifier>{c131e7d0-1348-4c99-934e-24c5055187d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InstanceFactories\Impl">
+      <UniqueIdentifier>{5aad0b4c-bed2-4085-8b6e-e618ee148f62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instantiator">
+      <UniqueIdentifier>{70eb839c-a7e4-4a94-8551-873fa75c8bc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instantiator\Impl">
+      <UniqueIdentifier>{f4c39dff-f45f-4c8f-a04c-99b6445d887f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lifetimes">
+      <UniqueIdentifier>{170ca78a-7373-4a7a-9e15-72de6dabf672}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Lifetimes.h">
+      <Filter>Lifetimes</Filter>
+    </ClInclude>
+    <ClInclude Include="TransientInstanceFactory.h">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="IInstanceFactory.h">
+      <Filter>InstanceFactories</Filter>
+    </ClInclude>
+    <ClInclude Include="SingletonInstanceFactory.h">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="Container.h">
+      <Filter>Containers\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="IContainer.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="StringHelpers.h" />
+    <ClInclude Include="IInstantiator.h">
+      <Filter>Instantiator</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultConstructorInstantiator.h">
+      <Filter>Instantiator\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="InstantiatorFactory.h">
+      <Filter>Instantiator</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadScopeInstanceFactory.h">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h" />
+    <ClInclude Include="Registry.h" />
+    <ClInclude Include="VariadicArgumentInstantiator.h">
+      <Filter>Instantiator\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h" />
+    <ClInclude Include="__LOC__.h" />
+    <ClInclude Include="Mutex.h" />
+    <ClInclude Include="Lock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Lifetimes.cpp">
+      <Filter>Lifetimes</Filter>
+    </ClCompile>
+    <ClCompile Include="IInstanceFactory.cpp">
+      <Filter>InstanceFactories</Filter>
+    </ClCompile>
+    <ClCompile Include="TransientInstanceFactory.cpp">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="SingletonInstanceFactory.cpp">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="IContainer.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Container.cpp">
+      <Filter>Containers\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="StringHelpers.cpp" />
+    <ClCompile Include="IInstantiator.cpp">
+      <Filter>Instantiator</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultConstructorInstantiator.cpp">
+      <Filter>Instantiator\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="InstantiatorFactory.cpp">
+      <Filter>Instantiator</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadScopeInstanceFactory.cpp">
+      <Filter>InstanceFactories\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp" />
+    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="VariadicArgumentInstantiator.cpp">
+      <Filter>Instantiator\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="Mutex.cpp" />
+    <ClCompile Include="Lock.cpp" />
+  </ItemGroup>
+</Project>
