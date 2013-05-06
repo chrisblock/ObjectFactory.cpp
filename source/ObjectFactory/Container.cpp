@@ -62,22 +62,43 @@ shared_ptr<void> Container::GetInstance(LPCTSTR interfaceTypeName) const
 {
 	shared_ptr<void> result;
 
-	auto pFactoryPair = _factoriesByTypeName.find(interfaceTypeName);
+	auto injectedItem = _injectedInstances.find(interfaceTypeName);
 
-	if (pFactoryPair == _factoriesByTypeName.end())
+	if (injectedItem != _injectedInstances.end())
 	{
-		basic_string<TCHAR> message(__LOC__ _T("Could not find instance factory for interface '"));
-		message += interfaceTypeName;
-		message += _T("'.");
-
-		throw new Exception(message.c_str());
+		result = injectedItem->second;
 	}
 	else
 	{
-		shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
+		auto pFactoryPair = _factoriesByTypeName.find(interfaceTypeName);
 
-		result = pFactory->GetInstance(*this, interfaceTypeName);
+		if (pFactoryPair == _factoriesByTypeName.end())
+		{
+			basic_string<TCHAR> message(__LOC__ _T("Could not find instance factory for interface '"));
+			message += interfaceTypeName;
+			message += _T("'.");
+
+			throw new Exception(message.c_str());
+		}
+		else
+		{
+			shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
+
+			result = pFactory->GetInstance(*this, interfaceTypeName);
+		}
 	}
 
 	return result;
+}
+
+void Container::Inject(LPCTSTR interfaceTypeName, const shared_ptr<void> &instance)
+{
+	_injectedInstances[interfaceTypeName] = instance;
+}
+
+void Container::EjectAllInstancesOf(LPCTSTR interfaceTypeName)
+{
+	_injectedInstances.erase(interfaceTypeName);
+
+	// TODO: forward the Eject call on to each factory so that they can clear their object caches too??
 }

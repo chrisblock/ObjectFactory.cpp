@@ -1,47 +1,65 @@
 #include "stdafx.h"
 
 #include <IContainer.h>
+#include <Container.h>
 #include <Exception.h>
 #include <Registry.h>
-#include <ObjectFactory.h>
+#include <IInstanceFactory.h>
+#include <SingletonInstanceFactory.h>
 
 #include "ITestInterface.h"
 #include "TestImplementation.h"
 
-class SingletonTestRegistry : public Registry
-{
-public:
-	virtual void Register(IContainer &container) const
-	{
-		container.Register<ITestInterface, TestImplementation>(Lifetimes::Singleton);
-	};
-};
-
 class SingletonInstanceFactoryTests : public testing::Test
 {
 protected:
+	shared_ptr<IContainer> _container;
+	shared_ptr<IInstanceFactory> _instanceFactory;
+
 	virtual void SetUp()
 	{
-		SingletonTestRegistry registry;
+		_container = make_shared<Container>();
 
-		ObjectFactory::Initialize(registry);
+		_instanceFactory = make_shared<SingletonInstanceFactory>();
 	};
 
 	virtual void TearDown()
 	{
-		ObjectFactory::Clear();
+		_container.reset();
+		_instanceFactory.reset();
 	};
 };
 
-TEST_F(SingletonInstanceFactoryTests, TypeNotRegistered_ThrowsException)
+TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategyNotSet_ThrowsException)
 {
-	EXPECT_THROW(ObjectFactory::GetInstance<TestImplementation>(), Exception*);
+	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), Exception*);
 }
 
-TEST_F(SingletonInstanceFactoryTests, InterfaceRegisteredAsSingleton_ReturnsReferenceToSameInstance)
+TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsReferenceToSameInstance)
 {
-	shared_ptr<ITestInterface> one = ObjectFactory::GetInstance<ITestInterface>();
-	shared_ptr<ITestInterface> two = ObjectFactory::GetInstance<ITestInterface>();
+	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
 
-	EXPECT_EQ(one.get(), two.get());
+	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	EXPECT_EQ(one, two);
+}
+
+TEST_F(SingletonInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)
+{
+	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+
+	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	EXPECT_NE(one, __nullptr);
+
+	_instanceFactory->Remove(typeName.c_str());
+
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), Exception*);
 }

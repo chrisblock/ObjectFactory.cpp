@@ -17,7 +17,7 @@ ThreadScopeInstanceFactory::~ThreadScopeInstanceFactory()
 {
 	_instances = __nullptr;
 	_threads.clear();
-	_instanceCreators.clear();
+	_instantiators.clear();
 }
 
 void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
@@ -53,9 +53,9 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 	}
 }
 
-void ThreadScopeInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instanceCreator)
+void ThreadScopeInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
 {
-	_instanceCreators[interfaceTypeName] = instanceCreator;
+	_instantiators[interfaceTypeName] = instantiator;
 }
 
 shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
@@ -70,9 +70,9 @@ shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &conta
 
 	if (instance == instances.end())
 	{
-		auto instanceCreator = _instanceCreators.find(interfaceTypeName);
+		auto instantiator = _instantiators.find(interfaceTypeName);
 
-		if (instanceCreator == _instanceCreators.end())
+		if (instantiator == _instantiators.end())
 		{
 			basic_string<TCHAR> message(__LOC__ _T("Could not find instantiator for interface '"));
 			message += interfaceTypeName;
@@ -82,7 +82,7 @@ shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &conta
 		}
 		else
 		{
-			auto creator = instanceCreator->second;
+			auto creator = instantiator->second;
 
 			result = creator->CreateInstance(container);
 
@@ -104,6 +104,6 @@ void ThreadScopeInstanceFactory::Remove(LPCTSTR interfaceTypeName)
 		Lock lock(_mutex);
 
 		_instances->erase(interfaceTypeName);
-		_instanceCreators.erase(interfaceTypeName);
+		_instantiators.erase(interfaceTypeName);
 	}
 }

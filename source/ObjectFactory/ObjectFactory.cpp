@@ -8,14 +8,12 @@ shared_ptr<IContainer> ObjectFactory::_container;
 
 void ObjectFactory::Initialize(const Registry &registry)
 {
-	Container *container = new Container();
+	_container = make_shared<Container>();
 
-	container->Initialize(registry);
-
-	_container.reset(container);
+	_container->Initialize(registry);
 }
 
 void ObjectFactory::Clear()
 {
-	_container.reset((IContainer *) __nullptr);
+	_container.reset();
 }

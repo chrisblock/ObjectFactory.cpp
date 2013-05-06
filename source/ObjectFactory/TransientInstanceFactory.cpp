@@ -6,21 +6,21 @@
 
 TransientInstanceFactory::~TransientInstanceFactory()
 {
-	_instanceCreators.clear();
+	_instantiators.clear();
 }
 
-void TransientInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instanceCreator)
+void TransientInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
 {
-	_instanceCreators[interfaceTypeName] = instanceCreator;
+	_instantiators[interfaceTypeName] = instantiator;
 }
 
 shared_ptr<void> TransientInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
 {
 	shared_ptr<void> result;
 
-	auto instanceCreator = _instanceCreators.find(interfaceTypeName);
+	auto instantiator = _instantiators.find(interfaceTypeName);
 
-	if (instanceCreator == _instanceCreators.end())
+	if (instantiator == _instantiators.end())
 	{
 		basic_string<TCHAR> message(__LOC__ _T("Could not find instance creator for interface '"));
 		message += interfaceTypeName;
@@ -30,7 +30,7 @@ shared_ptr<void> TransientInstanceFactory::GetInstance(const IContainer &contain
 	}
 	else
 	{
-		auto creator = instanceCreator->second;
+		auto creator = instantiator->second;
 
 		result = creator->CreateInstance(container);
 	}
@@ -40,5 +40,5 @@ shared_ptr<void> TransientInstanceFactory::GetInstance(const IContainer &contain
 
 void TransientInstanceFactory::Remove(LPCTSTR interfaceTypeName)
 {
-	_instanceCreators.erase(interfaceTypeName);
+	_instantiators.erase(interfaceTypeName);
 }

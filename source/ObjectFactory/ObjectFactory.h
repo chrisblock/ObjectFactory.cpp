@@ -19,6 +19,18 @@ public:
 		return result;
 	};
 
+	template <typename T>
+	static void Inject(const std::shared_ptr<T> &instance)
+	{
+		_container->Inject<T>(instance);
+	};
+
+	template <typename T>
+	static void EjectAllInstancesOf()
+	{
+		_container->EjectAllInstancesOf<T>();
+	};
+
 private:
 	ObjectFactory();
 

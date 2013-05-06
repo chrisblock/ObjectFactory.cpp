@@ -5,25 +5,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="TestInterface">
+      <UniqueIdentifier>{f69f8c7a-1a2d-4cb4-81bb-cae42b185c37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestInterface\Impl">
+      <UniqueIdentifier>{599549c2-f2bc-4b15-bb20-a955d9b8e1ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="ITestInterface.h" />
-    <ClInclude Include="TestImplementation.h" />
-    <ClInclude Include="ConstructorInjectedImplementation.h" />
-    <ClInclude Include="IConstructorInjectedInterface.h" />
+    <ClInclude Include="ConstructorInjectedImplementation.h">
+      <Filter>TestInterface\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="IConstructorInjectedInterface.h">
+      <Filter>TestInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ITestInterface.h">
+      <Filter>TestInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="TestImplementation.h">
+      <Filter>TestInterface\Impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ObjectFactory.Tests.cpp" />
-    <ClCompile Include="ITestInterface.cpp" />
     <ClCompile Include="SingletonInstanceFactoryTests.cpp" />
-    <ClCompile Include="TestImplementation.cpp" />
     <ClCompile Include="TransientInstanceFactoryTests.cpp" />
-    <ClCompile Include="ThreadInstanceFactoryTests.cpp" />
     <ClCompile Include="ConstructorInjectionTests.cpp" />
-    <ClCompile Include="ConstructorInjectedImplementation.cpp" />
-    <ClCompile Include="IConstructorInjectedInterface.cpp" />
+    <ClCompile Include="ContainerTests.cpp" />
+    <ClCompile Include="ConstructorInjectedImplementation.cpp">
+      <Filter>TestInterface\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="IConstructorInjectedInterface.cpp">
+      <Filter>TestInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ITestInterface.cpp">
+      <Filter>TestInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="TestImplementation.cpp">
+      <Filter>TestInterface\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadScopeInstanceFactory.cpp" />
   </ItemGroup>
 </Project>

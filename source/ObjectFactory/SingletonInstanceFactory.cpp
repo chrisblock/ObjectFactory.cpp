@@ -8,21 +8,18 @@
 SingletonInstanceFactory::SingletonInstanceFactory() :
 	  _mutex(FALSE)
 {
-	HANDLE h = ::CreateMutex(__nullptr, FALSE, __nullptr);
-
-	::WaitForSingleObject(h, INFINITE);
 }
 
 SingletonInstanceFactory::~SingletonInstanceFactory()
 {
 	_instances.clear();
 
-	_instanceCreators.clear();
+	_instantiators.clear();
 }
 
-void SingletonInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instanceCreator)
+void SingletonInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
 {
-	_instanceCreators[interfaceTypeName] = instanceCreator;
+	_instantiators[interfaceTypeName] = instantiator;
 }
 
 shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
@@ -35,9 +32,9 @@ shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &contain
 
 	if (instance == _instances.end())
 	{
-		auto instanceCreator = _instanceCreators.find(interfaceTypeName);
+		auto instantiator = _instantiators.find(interfaceTypeName);
 
-		if (instanceCreator == _instanceCreators.end())
+		if (instantiator == _instantiators.end())
 		{
 			basic_string<TCHAR> message(__LOC__ _T("Could not find instantiator for interface '"));
 			message += interfaceTypeName;
@@ -47,7 +44,7 @@ shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &contain
 		}
 		else
 		{
-			auto creator = instanceCreator->second;
+			auto creator = instantiator->second;
 
 			result = creator->CreateInstance(container);
 
@@ -67,7 +64,7 @@ void SingletonInstanceFactory::Remove(LPCTSTR interfaceTypeName)
 	Lock lock(_mutex);
 
 	_instances.erase(interfaceTypeName);
-	_instanceCreators.erase(interfaceTypeName);
+	_instantiators.erase(interfaceTypeName);
 }
 
 int SingletonInstanceFactory::GetNumberOfInstances() const

@@ -11,7 +11,6 @@ int _tmain(int argc, TCHAR* argv[])
 	static const TCHAR PAUSE[] = _T("-pause");
 
 	bool pause = false;
-	basic_string<TCHAR> filter;
 
 	for (int i = 1; i < argc; i++)
 	{
