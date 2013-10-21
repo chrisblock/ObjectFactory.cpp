@@ -4,7 +4,7 @@
 
 #include "IInstantiator.h"
 
-template <typename T>
+template <class T>
 class DefaultConstructorInstantiator : public IInstantiator
 {
 public:
@@ -12,7 +12,7 @@ public:
 	{
 	};
 
-	virtual std::shared_ptr<void> CreateInstance(const IContainer &)
+	virtual std::shared_ptr<void> CreateInstance(_In_ const IContainer &)
 	{
 		std::shared_ptr<void> result = make_shared<T>();
 

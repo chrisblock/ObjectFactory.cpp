@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ITestInterface.h"
+class ITestInterface;
 
 class IConstructorInjectedInterface
 {

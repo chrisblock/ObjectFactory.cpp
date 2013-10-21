@@ -2,31 +2,37 @@
 
 #include "TransientInstanceFactory.h"
 
-#include "Exception.h"
+#include "IInstantiator.h"
+
+TransientInstanceFactory::TransientInstanceFactory()
+{
+}
 
 TransientInstanceFactory::~TransientInstanceFactory()
 {
 	_instantiators.clear();
 }
 
-void TransientInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
+void TransientInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-shared_ptr<void> TransientInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
+std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
 {
-	shared_ptr<void> result;
+	std::shared_ptr<void> result;
 
 	auto instantiator = _instantiators.find(interfaceTypeName);
 
 	if (instantiator == _instantiators.end())
 	{
-		basic_string<TCHAR> message(__LOC__ _T("Could not find instance creator for interface '"));
+		std::string message(__LOC_A__ "Could not find instance creator for interface '");
 		message += interfaceTypeName;
-		message += _T("'.");
+		message += "'.";
 
-		throw new Exception(message.c_str());
+		std::exception e(message.c_str());
+
+		throw e;
 	}
 	else
 	{
@@ -38,7 +44,7 @@ shared_ptr<void> TransientInstanceFactory::GetInstance(const IContainer &contain
 	return result;
 }
 
-void TransientInstanceFactory::Remove(LPCTSTR interfaceTypeName)
+void TransientInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
 	_instantiators.erase(interfaceTypeName);
 }

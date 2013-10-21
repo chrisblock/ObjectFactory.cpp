@@ -2,14 +2,13 @@
 
 #include "ThreadScopeInstanceFactory.h"
 
-#include "Exception.h"
-#include "Lock.h"
+#include "IInstantiator.h"
 
-map<DWORD, shared_ptr<map<basic_string<TCHAR>, shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
-__declspec(thread) map<basic_string<TCHAR>, shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(__nullptr);
+std::map<DWORD, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
+__declspec(thread) std::map<std::string, std::shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(__nullptr);
 
 ThreadScopeInstanceFactory::ThreadScopeInstanceFactory() :
-	  _mutex(FALSE)
+	  _mutex()
 {
 }
 
@@ -24,7 +23,7 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 {
 	if (_instances == __nullptr)
 	{
-		Lock lock(_mutex);
+		std::unique_lock<std::recursive_mutex> lock(_mutex);
 
 		DWORD threadId = ::GetCurrentThreadId();
 
@@ -32,7 +31,7 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 
 		if (t == _threads.end())
 		{
-			shared_ptr<map<basic_string<TCHAR>, shared_ptr<void>>> threadInstances(new map<basic_string<TCHAR>, shared_ptr<void>>());
+			std::shared_ptr<std::map<std::string, std::shared_ptr<void>>> threadInstances = std::make_shared<std::map<std::string, std::shared_ptr<void>>>();
 
 			_threads[threadId] = threadInstances;
 
@@ -44,7 +43,7 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 			// here, we should assume the TLS member is more trustworthy than
 			// the value stored in the static map because of thread id re-use
 
-			shared_ptr<map<basic_string<TCHAR>, shared_ptr<void>>> threadInstances(new map<basic_string<TCHAR>, shared_ptr<void>>());
+			std::shared_ptr<std::map<std::string, std::shared_ptr<void>>> threadInstances = std::make_shared<std::map<std::string, std::shared_ptr<void>>>();
 
 			_threads[threadId] = threadInstances;
 
@@ -53,18 +52,18 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 	}
 }
 
-void ThreadScopeInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
+void ThreadScopeInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
+std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
 {
-	shared_ptr<void> result;
+	std::shared_ptr<void> result;
 
 	EnsureThreadLocalStorageInstancesCacheExists();
 
-	map<basic_string<TCHAR>, shared_ptr<void>> &instances = *_instances;
+	std::map<std::string, std::shared_ptr<void>> &instances = *_instances;
 
 	auto instance = instances.find(interfaceTypeName);
 
@@ -74,11 +73,13 @@ shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &conta
 
 		if (instantiator == _instantiators.end())
 		{
-			basic_string<TCHAR> message(__LOC__ _T("Could not find instantiator for interface '"));
+			std::string message(__LOC_A__ "Could not find instantiator for interface '");
 			message += interfaceTypeName;
-			message += _T("'.");
+			message += "'.";
 
-			throw new Exception(message.c_str());
+			std::exception e(message.c_str());
+
+			throw e;
 		}
 		else
 		{
@@ -97,11 +98,11 @@ shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(const IContainer &conta
 	return result;
 }
 
-void ThreadScopeInstanceFactory::Remove(LPCTSTR interfaceTypeName)
+void ThreadScopeInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
 	if (_instances != __nullptr)
 	{
-		Lock lock(_mutex);
+		std::unique_lock<std::recursive_mutex> lock(_mutex);
 
 		_instances->erase(interfaceTypeName);
 		_instantiators.erase(interfaceTypeName);

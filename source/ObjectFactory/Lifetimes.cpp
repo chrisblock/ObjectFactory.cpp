@@ -2,15 +2,15 @@
 
 #include "Lifetimes.h"
 
-#define DEFINE_LIFETIME_MAP(x) _lifetimeNames[x] = basic_string<TCHAR>(_STR2WSTR(STRINGIFY(x)));
+#define DEFINE_LIFETIME_MAP(x) _lifetimeNames[x] = std::string(STRINGIFY(x));
 
-std::map<Lifetimes::Lifetime, std::basic_string<TCHAR>> Lifetimes::_lifetimeNames;
+std::map<Lifetimes::Lifetime, std::string> Lifetimes::_lifetimeNames;
 
 Lifetimes::Lifetimes()
 {
 }
 
-basic_string<TCHAR> Lifetimes::GetName(Lifetime lifetime)
+std::string Lifetimes::GetName(_In_ Lifetime lifetime)
 {
 	if (_lifetimeNames.size() == 0)
 	{

@@ -47,6 +47,6 @@
     <ClCompile Include="TestImplementation.cpp">
       <Filter>TestInterface\Impl</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadScopeInstanceFactory.cpp" />
+    <ClCompile Include="ThreadScopeInstanceFactoryTests.cpp" />
   </ItemGroup>
 </Project>

@@ -7,5 +7,5 @@ class Registry
 public:
 	virtual ~Registry();
 
-	virtual void Register(IContainer &container) const = 0;
+	virtual void Register(_Inout_ IContainer &container) const = 0;
 };

@@ -2,7 +2,6 @@
 
 #include "Container.h"
 
-#include "Exception.h"
 #include "Lifetimes.h"
 #include "TransientInstanceFactory.h"
 #include "SingletonInstanceFactory.h"
@@ -10,9 +9,9 @@
 
 Container::Container()
 {
-	_factoriesByLifetime[Lifetimes::Transient] = make_shared<TransientInstanceFactory>();
-	_factoriesByLifetime[Lifetimes::Singleton] = make_shared<SingletonInstanceFactory>();
-	_factoriesByLifetime[Lifetimes::Thread] = make_shared<ThreadScopeInstanceFactory>();
+	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
+	_factoriesByLifetime[Lifetimes::Singleton] = std::make_shared<SingletonInstanceFactory>();
+	_factoriesByLifetime[Lifetimes::Thread] = std::make_shared<ThreadScopeInstanceFactory>();
 }
 
 Container::~Container()
@@ -22,28 +21,30 @@ Container::~Container()
 	_factoriesByTypeName.clear();
 }
 
-void Container::Initialize(const Registry &registry)
+void Container::Initialize(_In_ const Registry &registry)
 {
 	registry.Register(*this);
 }
 
-void Container::Register(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &implementationCreator, const Lifetimes::Lifetime lifetime)
+void Container::Register(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
 {
 	auto pFactoryPair = _factoriesByLifetime.find(lifetime);
 
 	if (pFactoryPair == _factoriesByLifetime.end())
 	{
-		basic_string<TCHAR> message(__LOC__ _T("Could not find factory for lifetime '"));
+		std::string message(__LOC_A__ "Could not find factory for lifetime '");
 		message += Lifetimes::GetName(lifetime);
-		message += _T("'.");
+		message += "'.";
 
-		throw new Exception(message.c_str());
+		std::exception e(message.c_str());
+
+		throw e;
 	}
 	else
 	{
 		Remove(interfaceTypeName);
 
-		shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
+		std::shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
 
 		pFactory->SetCreationStrategy(interfaceTypeName, implementationCreator);
 
@@ -51,16 +52,16 @@ void Container::Register(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiat
 	}
 }
 
-void Container::Remove(LPCTSTR interfaceTypeName)
+void Container::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
 	_factoriesByLifetime[Lifetimes::Transient]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Singleton]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Thread]->Remove(interfaceTypeName);
 }
 
-shared_ptr<void> Container::GetInstance(LPCTSTR interfaceTypeName) const
+std::shared_ptr<void> Container::GetInstance(_In_z_ LPCSTR interfaceTypeName) const
 {
-	shared_ptr<void> result;
+	std::shared_ptr<void> result;
 
 	auto injectedItem = _injectedInstances.find(interfaceTypeName);
 
@@ -74,15 +75,17 @@ shared_ptr<void> Container::GetInstance(LPCTSTR interfaceTypeName) const
 
 		if (pFactoryPair == _factoriesByTypeName.end())
 		{
-			basic_string<TCHAR> message(__LOC__ _T("Could not find instance factory for interface '"));
+			std::string message(__LOC_A__ "Could not find instance factory for interface '");
 			message += interfaceTypeName;
-			message += _T("'.");
+			message += "'.";
 
-			throw new Exception(message.c_str());
+			std::exception e(message.c_str());
+
+			throw e;
 		}
 		else
 		{
-			shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
+			std::shared_ptr<IInstanceFactory> pFactory = pFactoryPair->second;
 
 			result = pFactory->GetInstance(*this, interfaceTypeName);
 		}
@@ -91,12 +94,12 @@ shared_ptr<void> Container::GetInstance(LPCTSTR interfaceTypeName) const
 	return result;
 }
 
-void Container::Inject(LPCTSTR interfaceTypeName, const shared_ptr<void> &instance)
+void Container::Inject(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<void> &instance)
 {
 	_injectedInstances[interfaceTypeName] = instance;
 }
 
-void Container::EjectAllInstancesOf(LPCTSTR interfaceTypeName)
+void Container::EjectAllInstancesOf(_In_z_ LPCSTR interfaceTypeName)
 {
 	_injectedInstances.erase(interfaceTypeName);
 

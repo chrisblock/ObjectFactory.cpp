@@ -2,31 +2,36 @@
 
 #include "SingletonInstanceFactory.h"
 
-#include "Exception.h"
-#include "Lock.h"
+#include "IInstantiator.h"
 
 SingletonInstanceFactory::SingletonInstanceFactory() :
-	  _mutex(FALSE)
+	  _mutex()
 {
 }
 
+_Acquires_exclusive_lock_(this->_mutex)
+_Releases_exclusive_lock_(this->_mutex)
 SingletonInstanceFactory::~SingletonInstanceFactory()
 {
+	std::unique_lock<std::recursive_mutex> lock(_mutex);
+
 	_instances.clear();
 
 	_instantiators.clear();
 }
 
-void SingletonInstanceFactory::SetCreationStrategy(LPCTSTR interfaceTypeName, const shared_ptr<IInstantiator> &instantiator)
+void SingletonInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &container, LPCTSTR interfaceTypeName)
+_Acquires_exclusive_lock_(this->_mutex)
+_Releases_exclusive_lock_(this->_mutex)
+std::shared_ptr<void> SingletonInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
 {
-	shared_ptr<void> result;
+	std::shared_ptr<void> result;
 
-	Lock lock(_mutex);
+	std::unique_lock<std::recursive_mutex> lock(_mutex);
 
 	auto instance = _instances.find(interfaceTypeName);
 
@@ -36,11 +41,13 @@ shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &contain
 
 		if (instantiator == _instantiators.end())
 		{
-			basic_string<TCHAR> message(__LOC__ _T("Could not find instantiator for interface '"));
+			std::string message(__LOC_A__ " Could not find instantiator for interface '");
 			message += interfaceTypeName;
-			message += _T("'.");
+			message += "'.";
 
-			throw new Exception(message.c_str());
+			std::exception e(message.c_str());
+
+			throw e;
 		}
 		else
 		{
@@ -59,9 +66,11 @@ shared_ptr<void> SingletonInstanceFactory::GetInstance(const IContainer &contain
 	return result;
 }
 
-void SingletonInstanceFactory::Remove(LPCTSTR interfaceTypeName)
+_Acquires_exclusive_lock_(this->_mutex)
+_Releases_exclusive_lock_(this->_mutex)
+void SingletonInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
-	Lock lock(_mutex);
+	std::unique_lock<std::recursive_mutex> lock(_mutex);
 
 	_instances.erase(interfaceTypeName);
 	_instantiators.erase(interfaceTypeName);

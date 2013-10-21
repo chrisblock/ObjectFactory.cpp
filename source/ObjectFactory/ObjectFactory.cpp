@@ -4,11 +4,11 @@
 
 #include "Container.h"
 
-shared_ptr<IContainer> ObjectFactory::_container;
+std::shared_ptr<IContainer> ObjectFactory::_container;
 
-void ObjectFactory::Initialize(const Registry &registry)
+void ObjectFactory::Initialize(_In_ const Registry &registry)
 {
-	_container = make_shared<Container>();
+	_container = std::make_shared<Container>();
 
 	_container->Initialize(registry);
 }

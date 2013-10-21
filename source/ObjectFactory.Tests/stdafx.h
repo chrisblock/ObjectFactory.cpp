@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include <gtest.h>

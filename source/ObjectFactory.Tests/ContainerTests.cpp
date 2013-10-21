@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include <Exception.h>
 #include <IContainer.h>
 #include <Container.h>
 #include <Lifetimes.h>
@@ -41,7 +40,7 @@ private:
 
 TEST_F(ContainerTests, GetInstance_TypeNotRegistered_ThrowsException)
 {
-	EXPECT_THROW(_container->GetInstance<int>(), Exception*);
+	EXPECT_THROW(_container->GetInstance<int>(), std::exception);
 }
 
 TEST_F(ContainerTests, GetInstance_RegisteredType_ReturnsInstance)

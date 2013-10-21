@@ -6,9 +6,8 @@
 
 #include "IInstanceFactory.h"
 
-#include "Mutex.h"
-#include "IInstantiator.h"
-#include "IContainer.h"
+class IContainer;
+class IInstantiator;
 
 class ThreadScopeInstanceFactory : public IInstanceFactory
 {
@@ -16,17 +15,17 @@ public:
 	ThreadScopeInstanceFactory();
 	virtual ~ThreadScopeInstanceFactory();
 
-	virtual void SetCreationStrategy(LPCTSTR interfaceTypeName, const std::shared_ptr<IInstantiator> &instantiator);
+	virtual void SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
 
-	virtual shared_ptr<void> GetInstance(const IContainer &container, LPCTSTR interfaceTypeName);
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName);
 
-	virtual void Remove(LPCTSTR interfaceTypeName);
+	virtual void Remove(_In_z_ LPCSTR interfaceTypeName);
 
 private:
-	Mutex _mutex;
-	static std::map<DWORD, shared_ptr<std::map<basic_string<TCHAR>, std::shared_ptr<void>>>> _threads;
-	static __declspec(thread) std::map<std::basic_string<TCHAR>, std::shared_ptr<void>> *_instances;
-	std::map<std::basic_string<TCHAR>, std::shared_ptr<IInstantiator>> _instantiators;
+	std::recursive_mutex _mutex;
+	static std::map<DWORD, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> _threads;
+	static __declspec(thread) std::map<std::string, std::shared_ptr<void>> *_instances;
+	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 
 	void EnsureThreadLocalStorageInstancesCacheExists();
 };

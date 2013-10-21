@@ -4,7 +4,7 @@
 
 #include <InstantiatorFactory.h>
 
-#include "ITestInterface.h"
+class ITestInterface;
 
 class ConstructorInjectedImplementation : public IConstructorInjectedInterface
 {

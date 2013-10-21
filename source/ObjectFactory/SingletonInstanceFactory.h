@@ -6,26 +6,34 @@
 
 #include "IInstanceFactory.h"
 
-#include "Mutex.h"
-#include "IInstantiator.h"
-#include "IContainer.h"
+class IContainer;
+class IInstantiator;
 
 class SingletonInstanceFactory : public IInstanceFactory
 {
 public:
 	SingletonInstanceFactory();
+
+	_Acquires_exclusive_lock_(this->_mutex)
+	_Releases_exclusive_lock_(this->_mutex)
 	virtual ~SingletonInstanceFactory();
 
-	virtual void SetCreationStrategy(LPCTSTR interfaceTypeName, const std::shared_ptr<IInstantiator> &instantiator);
+	virtual void SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
 
-	virtual shared_ptr<void> GetInstance(const IContainer &container, LPCTSTR interfaceTypeName);
+	_Acquires_exclusive_lock_(this->_mutex)
+	_Releases_exclusive_lock_(this->_mutex)
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName);
 
-	virtual void Remove(LPCTSTR interfaceTypeName);
+	_Acquires_exclusive_lock_(this->_mutex)
+	_Releases_exclusive_lock_(this->_mutex)
+	virtual void Remove(_In_z_ LPCSTR interfaceTypeName);
 
 	int GetNumberOfInstances() const;
 
 private:
-	Mutex _mutex;
-	std::map<std::basic_string<TCHAR>, std::shared_ptr<void>> _instances;
-	std::map<std::basic_string<TCHAR>, std::shared_ptr<IInstantiator>> _instantiators;
+	std::recursive_mutex _mutex;
+
+	_Guarded_by_(_mutex)
+	std::map<std::string, std::shared_ptr<void>> _instances;
+	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 };

@@ -9,7 +9,7 @@
 class InstantiatorFactory
 {
 public:
-	template <typename T>
+	template <class T>
 	static std::shared_ptr<IInstantiator> CreateInstantiator()
 	{
 		std::shared_ptr<IInstantiator> result = make_shared<DefaultConstructorInstantiator<T>>();

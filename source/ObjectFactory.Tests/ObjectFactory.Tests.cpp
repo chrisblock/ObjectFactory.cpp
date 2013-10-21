@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
-#include <ObjectFactory.h>
-
-int _tmain(int argc, TCHAR* argv[])
+int _tmain(int argc, TCHAR *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
 
@@ -25,7 +23,9 @@ int _tmain(int argc, TCHAR* argv[])
 	if (pause == true)
 	{
 		::_tprintf_s(_T("Please press any key to continue."));
-		::_gettch();
+		unsigned short c = ::_gettch();
+
+		c;
 	}
 
 	return 0;

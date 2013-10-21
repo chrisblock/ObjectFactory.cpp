@@ -3,15 +3,16 @@
 #include <memory>
 
 #include "IContainer.h"
-#include "Registry.h"
+
+class Registry;
 
 class ObjectFactory
 {
 public:
-	static void Initialize(const Registry &registry);
+	static void Initialize(_In_ const Registry &registry);
 	static void Clear();
 	
-	template <typename T>
+	template <class T>
 	static std::shared_ptr<T> GetInstance()
 	{
 		std::shared_ptr<T> result = _container->GetInstance<T>();
@@ -19,13 +20,13 @@ public:
 		return result;
 	};
 
-	template <typename T>
-	static void Inject(const std::shared_ptr<T> &instance)
+	template <class T>
+	static void Inject(_In_ const std::shared_ptr<T> &instance)
 	{
 		_container->Inject<T>(instance);
 	};
 
-	template <typename T>
+	template <class T>
 	static void EjectAllInstancesOf()
 	{
 		_container->EjectAllInstancesOf<T>();

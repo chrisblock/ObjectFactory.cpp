@@ -4,18 +4,12 @@
 
 #include "__LOC__.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <tchar.h>
 
 #include <windows.h>
 
-#include <string>
-#include <list>
 #include <map>
-
 #include <memory>
-#include <iostream>
-
-#include "StringHelpers.h"
-
-using namespace std;
+#include <mutex>
+#include <string>

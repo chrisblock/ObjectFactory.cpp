@@ -9,11 +9,11 @@ class IInstantiator
 public:
 	virtual ~IInstantiator();
 
-	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) = 0;
+	virtual std::shared_ptr<void> CreateInstance(_In_ const IContainer &container) = 0;
 
 protected:
-	template <typename T>
-	static void Delete(void *instance)
+	template <class T>
+	static void Delete(_In_ void *instance)
 	{
 		T *pointer = static_cast<T *>(instance);
 

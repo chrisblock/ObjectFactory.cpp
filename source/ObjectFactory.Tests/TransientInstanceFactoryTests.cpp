@@ -2,7 +2,6 @@
 
 #include <IContainer.h>
 #include <Container.h>
-#include <Exception.h>
 #include <Registry.h>
 #include <IInstanceFactory.h>
 #include <TransientInstanceFactory.h>
@@ -32,14 +31,14 @@ protected:
 
 TEST_F(TransientInstanceFactoryTests, GetInstance_CreationStrategyNotSet_ThrowsException)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
-	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), Exception*);
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
 }
 
 TEST_F(TransientInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDifferentInstances)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
@@ -51,7 +50,7 @@ TEST_F(TransientInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDif
 
 TEST_F(TransientInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
@@ -61,6 +60,5 @@ TEST_F(TransientInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreat
 
 	_instanceFactory->Remove(typeName.c_str());
 
-	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), Exception*);
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
 }
-

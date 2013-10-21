@@ -15,10 +15,11 @@ public:
 		Thread
 	};
 
-	static std::basic_string<TCHAR> GetName(Lifetime lifetime);
+	static std::string GetName(_In_ Lifetime lifetime);
 
 private:
-	static std::map<Lifetime, std::basic_string<TCHAR>> _lifetimeNames;
+	static std::map<Lifetime, std::string> _lifetimeNames;
 
 	Lifetimes();
+	Lifetimes(const Lifetimes &other);
 };

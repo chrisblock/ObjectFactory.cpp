@@ -2,7 +2,6 @@
 
 #include <IContainer.h>
 #include <Container.h>
-#include <Exception.h>
 #include <Registry.h>
 #include <InstantiatorFactory.h>
 #include <IInstanceFactory.h>
@@ -33,14 +32,14 @@ protected:
 
 TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategyNotSet_ThrowsException)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
-	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), Exception*);
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
 }
 
 TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsSameInstanceOnSameThread)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
@@ -58,7 +57,7 @@ typedef struct tagThreadArgument
 
 ULONG WINAPI ThreadMain(void *ptr)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
 	ThreadArgument *arg = static_cast<ThreadArgument *>(ptr);
 
@@ -69,7 +68,7 @@ ULONG WINAPI ThreadMain(void *ptr)
 
 TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDifferentInstancesOnDifferentThreads)
 {
-	auto typeName = ::ConvertToTString(typeid (ITestInterface).name());
+	std::string typeName = typeid (ITestInterface).name();
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
@@ -96,4 +95,19 @@ TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsD
 
 		EXPECT_NE((ULONG) one.get(), result);
 	}
+}
+
+TEST_F(ThreadScopeInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)
+{
+	std::string typeName = typeid (ITestInterface).name();
+
+	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	EXPECT_NE(one, __nullptr);
+
+	_instanceFactory->Remove(typeName.c_str());
+
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
 }

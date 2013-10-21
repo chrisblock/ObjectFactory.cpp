@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <IContainer.h>
-#include <Exception.h>
 #include <Registry.h>
 #include <ObjectFactory.h>
 
@@ -24,15 +23,16 @@ class ConstructorInjectionTests : public testing::Test
 protected:
 	virtual void SetUp()
 	{
-		ConstructorInjectionTestRegistry registry;
-
-		ObjectFactory::Initialize(registry);
+		ObjectFactory::Initialize(_registry);
 	};
 
 	virtual void TearDown()
 	{
 		ObjectFactory::Clear();
 	};
+
+private:
+	ConstructorInjectionTestRegistry _registry;
 };
 
 TEST_F(ConstructorInjectionTests, InterfaceRegistered_InstantiatorMacroUsedForConstructorInjection_ReturnsInstanceWithInjectedMemberInstance)

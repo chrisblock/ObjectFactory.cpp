@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,7 +22,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -30,7 +30,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -44,9 +44,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,6 +63,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <AdditionalOptions>/D_VARIADIC_MAX=10 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -69,7 +72,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -77,6 +80,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -88,9 +93,6 @@
   <ItemGroup>
     <ClInclude Include="Container.h" />
     <ClInclude Include="DefaultConstructorInstantiator.h" />
-    <ClInclude Include="Exception.h" />
-    <ClInclude Include="Lock.h" />
-    <ClInclude Include="Mutex.h" />
     <ClInclude Include="IContainer.h" />
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IInstanceFactory.h" />
@@ -100,7 +102,6 @@
     <ClInclude Include="Registry.h" />
     <ClInclude Include="SingletonInstanceFactory.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StringHelpers.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ThreadScopeInstanceFactory.h" />
     <ClInclude Include="TransientInstanceFactory.h" />
@@ -110,14 +111,11 @@
   <ItemGroup>
     <ClCompile Include="Container.cpp" />
     <ClCompile Include="DefaultConstructorInstantiator.cpp" />
-    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="IContainer.cpp" />
     <ClCompile Include="IInstantiator.cpp" />
     <ClCompile Include="IInstanceFactory.cpp" />
     <ClCompile Include="InstantiatorFactory.cpp" />
     <ClCompile Include="Lifetimes.cpp" />
-    <ClCompile Include="Lock.cpp" />
-    <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="SingletonInstanceFactory.cpp" />
@@ -125,7 +123,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="ThreadScopeInstanceFactory.cpp" />
     <ClCompile Include="TransientInstanceFactory.cpp" />
     <ClCompile Include="VariadicArgumentInstantiator.cpp" />

@@ -6,17 +6,20 @@
 
 #include "IInstanceFactory.h"
 
+class IInstantiator;
+
 class TransientInstanceFactory : public IInstanceFactory
 {
 public:
+	TransientInstanceFactory();
 	virtual ~TransientInstanceFactory();
 
-	virtual void SetCreationStrategy(LPCTSTR interfaceTypeName, const std::shared_ptr<IInstantiator> &instantiator);
+	virtual void SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
 
-	virtual std::shared_ptr<void> GetInstance(const IContainer &container, LPCTSTR interfaceTypeName);
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName);
 
-	virtual void Remove(LPCTSTR interfaceTypeName);
+	virtual void Remove(_In_z_ LPCSTR interfaceTypeName);
 
 private:
-	std::map<std::basic_string<TCHAR>, std::shared_ptr<IInstantiator>> _instantiators;
+	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 };

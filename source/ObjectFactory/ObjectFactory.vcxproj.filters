@@ -44,7 +44,6 @@
     </ClInclude>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="StringHelpers.h" />
     <ClInclude Include="IInstantiator.h">
       <Filter>Instantiator</Filter>
     </ClInclude>
@@ -62,10 +61,7 @@
     <ClInclude Include="VariadicArgumentInstantiator.h">
       <Filter>Instantiator\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="Exception.h" />
     <ClInclude Include="__LOC__.h" />
-    <ClInclude Include="Mutex.h" />
-    <ClInclude Include="Lock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lifetimes.cpp">
@@ -87,7 +83,6 @@
       <Filter>Containers\Impl</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="IInstantiator.cpp">
       <Filter>Instantiator</Filter>
     </ClCompile>
@@ -105,8 +100,5 @@
     <ClCompile Include="VariadicArgumentInstantiator.cpp">
       <Filter>Instantiator\Impl</Filter>
     </ClCompile>
-    <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="Mutex.cpp" />
-    <ClCompile Include="Lock.cpp" />
   </ItemGroup>
 </Project>
