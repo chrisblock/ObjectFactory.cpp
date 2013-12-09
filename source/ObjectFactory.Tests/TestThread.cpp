@@ -6,9 +6,8 @@
 #include <IInstanceFactory.h>
 
 class ITestInterface;
-//#include "ITestInterface.h"
 
-TestThread::TestThread(const shared_ptr<IContainer> &container, const shared_ptr<IInstanceFactory> &instanceFactory) :
+TestThread::TestThread(const std::shared_ptr<IContainer> &container, const std::shared_ptr<IInstanceFactory> &instanceFactory) :
 	  _interfacePointer(__nullptr)
 	, _container(container)
 	, _instanceFactory(instanceFactory)
@@ -41,7 +40,7 @@ void TestThread::ThreadMain()
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	shared_ptr<void> result = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> result = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	_interfacePointer = result.get();
 }

@@ -13,12 +13,12 @@ TransientInstanceFactory::~TransientInstanceFactory()
 	_instantiators.clear();
 }
 
-void TransientInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
+void TransientInstanceFactory::SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
+std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName)
 {
 	std::shared_ptr<void> result;
 
@@ -44,14 +44,12 @@ std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContaine
 	return result;
 }
 
-void TransientInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
+void TransientInstanceFactory::RemoveInstance(_In_z_ const char *)
 {
-	UNREFERENCED_PARAMETER(interfaceTypeName);
-
 	// this method does nothing here because this instance factory does not keep track of instances it has created
 }
 
-void TransientInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
+void TransientInstanceFactory::Remove(_In_z_ const char *interfaceTypeName)
 {
 	_instantiators.erase(interfaceTypeName);
 }

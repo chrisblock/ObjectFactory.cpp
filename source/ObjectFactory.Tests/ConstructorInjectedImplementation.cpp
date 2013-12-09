@@ -4,7 +4,7 @@
 
 IMPLEMENT_INSTANTIATOR(ConstructorInjectedImplementation, ITestInterface);
 
-ConstructorInjectedImplementation::ConstructorInjectedImplementation(const shared_ptr<ITestInterface> &testInterface) :
+ConstructorInjectedImplementation::ConstructorInjectedImplementation(const std::shared_ptr<ITestInterface> &testInterface) :
 	  _testInterface(testInterface)
 {
 }
@@ -13,7 +13,7 @@ ConstructorInjectedImplementation::~ConstructorInjectedImplementation()
 {
 }
 
-shared_ptr<ITestInterface> ConstructorInjectedImplementation::GetTestInterface() const
+std::shared_ptr<ITestInterface> ConstructorInjectedImplementation::GetTestInterface() const
 {
 	return _testInterface;
 }

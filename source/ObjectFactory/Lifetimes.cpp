@@ -2,18 +2,24 @@
 
 #include "Lifetimes.h"
 
-#define DEFINE_LIFETIME_MAP(x) _lifetimeNames[x] = std::string(STRINGIFY(x));
-
-std::map<Lifetimes::Lifetime, std::string> Lifetimes::_lifetimeNames;
-
 std::string Lifetimes::GetName(_In_ Lifetime lifetime)
 {
-	if (_lifetimeNames.size() == 0)
+	std::string result;
+
+	switch (lifetime)
 	{
-		DEFINE_LIFETIME_MAP(Lifetimes::Singleton);
-		DEFINE_LIFETIME_MAP(Lifetimes::Transient);
-		DEFINE_LIFETIME_MAP(Lifetimes::Thread);
+	case Lifetimes::Singleton:
+		result = "Singleton";
+		break;
+	case Lifetimes::Thread:
+		result = "Thread";
+		break;
+	case Lifetimes::Transient:
+		result = "Transient";
+		break;
+	default:
+		break;
 	}
 
-	return _lifetimeNames[lifetime];
+	return result;
 }

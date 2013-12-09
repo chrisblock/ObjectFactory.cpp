@@ -54,12 +54,12 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 	}
 }
 
-void ThreadScopeInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
+void ThreadScopeInstanceFactory::SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
+std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName)
 {
 	std::shared_ptr<void> result;
 
@@ -100,7 +100,7 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 	return result;
 }
 
-void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
+void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ const char *interfaceTypeName)
 {
 	if (_instances != __nullptr)
 	{
@@ -110,7 +110,7 @@ void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
 	}
 }
 
-void ThreadScopeInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
+void ThreadScopeInstanceFactory::Remove(_In_z_ const char *interfaceTypeName)
 {
 	if (_instances != __nullptr)
 	{

@@ -20,11 +20,11 @@ public:
 class ContainerTests : public testing::Test
 {
 protected:
-	shared_ptr<IContainer> _container;
+	std::shared_ptr<IContainer> _container;
 
 	virtual void SetUp()
 	{
-		_container = make_shared<Container>();
+		_container = std::make_shared<Container>();
 
 		_container->Initialize(_registry);
 	};
@@ -45,19 +45,19 @@ TEST_F(ContainerTests, GetInstance_TypeNotRegistered_ThrowsException)
 
 TEST_F(ContainerTests, GetInstance_RegisteredType_ReturnsInstance)
 {
-	shared_ptr<ITestInterface> result = _container->GetInstance<ITestInterface>();
+	std::shared_ptr<ITestInterface> result = _container->GetInstance<ITestInterface>();
 
 	EXPECT_NE(result, __nullptr);
 }
 
 TEST_F(ContainerTests, Inject_InstanceOfType_InjectedInstanceIsReturned)
 {
-	shared_ptr<TestImplementation> instance = make_shared<TestImplementation>();
+	std::shared_ptr<TestImplementation> instance = std::make_shared<TestImplementation>();
 
 	_container->Inject<ITestInterface>(instance);
 
-	shared_ptr<ITestInterface> result1 = _container->GetInstance<ITestInterface>();
-	shared_ptr<ITestInterface> result2 = _container->GetInstance<ITestInterface>();
+	std::shared_ptr<ITestInterface> result1 = _container->GetInstance<ITestInterface>();
+	std::shared_ptr<ITestInterface> result2 = _container->GetInstance<ITestInterface>();
 
 	EXPECT_EQ(result1, instance);
 	EXPECT_EQ(result2, instance);
@@ -66,11 +66,11 @@ TEST_F(ContainerTests, Inject_InstanceOfType_InjectedInstanceIsReturned)
 
 TEST_F(ContainerTests, EjectAllInstancesOf_EjectedType_InjectedInstanceIsNotReturned)
 {
-	shared_ptr<TestImplementation> instance = make_shared<TestImplementation>();
+	std::shared_ptr<TestImplementation> instance = std::make_shared<TestImplementation>();
 
 	_container->Inject<ITestInterface>(instance);
 
-	shared_ptr<ITestInterface> result = _container->GetInstance<ITestInterface>();
+	std::shared_ptr<ITestInterface> result = _container->GetInstance<ITestInterface>();
 
 	EXPECT_EQ(result, instance);
 

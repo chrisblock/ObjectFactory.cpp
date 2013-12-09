@@ -37,7 +37,7 @@ private:
 
 TEST_F(ConstructorInjectionTests, InterfaceRegistered_InstantiatorMacroUsedForConstructorInjection_ReturnsInstanceWithInjectedMemberInstance)
 {
-	shared_ptr<IConstructorInjectedInterface> one = ObjectFactory::GetInstance<IConstructorInjectedInterface>();
+	std::shared_ptr<IConstructorInjectedInterface> one = ObjectFactory::GetInstance<IConstructorInjectedInterface>();
 
 	EXPECT_NE(__nullptr, one);
 	EXPECT_NE(__nullptr, one->GetTestInterface());

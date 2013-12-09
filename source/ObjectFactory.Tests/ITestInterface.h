@@ -5,6 +5,6 @@ class ITestInterface
 public:
 	virtual ~ITestInterface();
 
-	virtual basic_string<TCHAR> GetString() const = 0;
-	virtual void SetString(LPCTSTR string) = 0;
+	virtual std::string GetString() const = 0;
+	virtual void SetString(const char *string) = 0;
 };

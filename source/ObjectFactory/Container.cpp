@@ -13,9 +13,9 @@ Container::Container() :
 	, _factoriesByTypeName()
 	, _injectedInstances()
 {
-	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Singleton] = std::make_shared<SingletonInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Thread] = std::make_shared<ThreadScopeInstanceFactory>();
+	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
 }
 
 Container::Container(const Container &other) :
@@ -46,7 +46,7 @@ void Container::Initialize(_In_ const Registry &registry)
 	registry.Register(*this);
 }
 
-void Container::Register(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
+void Container::Register(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
 {
 	auto pFactoryPair = _factoriesByLifetime.find(lifetime);
 
@@ -72,14 +72,14 @@ void Container::Register(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared
 	}
 }
 
-void Container::Remove(_In_z_ LPCSTR interfaceTypeName)
+void Container::Remove(_In_z_ const char *interfaceTypeName)
 {
-	_factoriesByLifetime[Lifetimes::Transient]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Singleton]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Thread]->Remove(interfaceTypeName);
+	_factoriesByLifetime[Lifetimes::Transient]->Remove(interfaceTypeName);
 }
 
-std::shared_ptr<void> Container::GetInstance(_In_z_ LPCSTR interfaceTypeName) const
+std::shared_ptr<void> Container::GetInstance(_In_z_ const char *interfaceTypeName) const
 {
 	std::shared_ptr<void> result;
 
@@ -114,12 +114,12 @@ std::shared_ptr<void> Container::GetInstance(_In_z_ LPCSTR interfaceTypeName) co
 	return result;
 }
 
-void Container::Inject(_In_z_ LPCSTR interfaceTypeName, _In_ const std::shared_ptr<void> &instance)
+void Container::Inject(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<void> &instance)
 {
 	_injectedInstances[interfaceTypeName] = instance;
 }
 
-void Container::EjectAllInstancesOf(_In_z_ LPCSTR interfaceTypeName)
+void Container::EjectAllInstancesOf(_In_z_ const char *interfaceTypeName)
 {
 	_injectedInstances.erase(interfaceTypeName);
 

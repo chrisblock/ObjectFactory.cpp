@@ -9,7 +9,7 @@ class IInstanceFactory;
 class TestThread
 {
 public:
-	TestThread(const shared_ptr<IContainer> &container, const shared_ptr<IInstanceFactory> &instanceFactory);
+	TestThread(const std::shared_ptr<IContainer> &container, const std::shared_ptr<IInstanceFactory> &instanceFactory);
 	~TestThread();
 
 	void Start();
@@ -20,8 +20,8 @@ public:
 private:
 	void ThreadMain();
 
-	shared_ptr<IContainer> _container;
-	shared_ptr<IInstanceFactory> _instanceFactory;
+	std::shared_ptr<IContainer> _container;
+	std::shared_ptr<IInstanceFactory> _instanceFactory;
 	void *_interfacePointer;
 	std::thread _thread;
 };

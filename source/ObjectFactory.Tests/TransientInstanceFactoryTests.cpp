@@ -12,14 +12,14 @@
 class TransientInstanceFactoryTests : public testing::Test
 {
 protected:
-	shared_ptr<IContainer> _container;
-	shared_ptr<IInstanceFactory> _instanceFactory;
+	std::shared_ptr<IContainer> _container;
+	std::shared_ptr<IInstanceFactory> _instanceFactory;
 
 	virtual void SetUp()
 	{
-		_container = make_shared<Container>();
+		_container = std::make_shared<Container>();
 
-		_instanceFactory = make_shared<TransientInstanceFactory>();
+		_instanceFactory = std::make_shared<TransientInstanceFactory>();
 	};
 
 	virtual void TearDown()
@@ -42,8 +42,8 @@ TEST_F(TransientInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDif
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
-	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	EXPECT_NE(one, two);
 }
@@ -61,7 +61,7 @@ TEST_F(TransientInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreat
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	EXPECT_NE(one, __nullptr);
 

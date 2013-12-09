@@ -7,9 +7,9 @@ class TestImplementation : public ITestInterface
 public:
 	virtual ~TestImplementation();
 
-	virtual basic_string<TCHAR> GetString() const;
-	virtual void SetString(LPCTSTR string);
+	virtual std::string GetString() const;
+	virtual void SetString(const char *string);
 
 private:
-	basic_string<TCHAR> _string;
+	std::string _string;
 };

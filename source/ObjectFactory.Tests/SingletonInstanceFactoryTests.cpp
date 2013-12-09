@@ -12,14 +12,14 @@
 class SingletonInstanceFactoryTests : public testing::Test
 {
 protected:
-	shared_ptr<IContainer> _container;
-	shared_ptr<IInstanceFactory> _instanceFactory;
+	std::shared_ptr<IContainer> _container;
+	std::shared_ptr<IInstanceFactory> _instanceFactory;
 
 	virtual void SetUp()
 	{
-		_container = make_shared<Container>();
+		_container = std::make_shared<Container>();
 
-		_instanceFactory = make_shared<SingletonInstanceFactory>();
+		_instanceFactory = std::make_shared<SingletonInstanceFactory>();
 	};
 
 	virtual void TearDown()
@@ -42,8 +42,8 @@ TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsRef
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
-	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	EXPECT_EQ(one, two);
 }
@@ -61,12 +61,12 @@ TEST_F(SingletonInstanceFactoryTests, RemoveInstance_CreationStrategySet_Removes
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	_instanceFactory->RemoveInstance(typeName.c_str());
 
-	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
-	shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	EXPECT_NE(one, two);
 	EXPECT_EQ(two, three);
@@ -78,7 +78,7 @@ TEST_F(SingletonInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreat
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
 	EXPECT_NE(one, __nullptr);
 

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <tchar.h>
+
 int _tmain(int argc, TCHAR *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);

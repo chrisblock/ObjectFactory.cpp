@@ -4,7 +4,7 @@
 
 #include "IContainer.h"
 
-template <class TResult, class... TArgs>
+template <typename TResult, typename... TArgs>
 class VariadicArgumentInstantiator : public IInstantiator
 {
 public:
@@ -15,7 +15,7 @@ public:
 	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const
 	{
 		// when there are no variadic type arguments, the compiler will complain about unreferenced formal parameters
-		UNREFERENCED_PARAMETER(container);
+		container;
 
 		std::shared_ptr<void> result = std::make_shared<TResult>(container.GetInstance<TArgs>()...);
 
