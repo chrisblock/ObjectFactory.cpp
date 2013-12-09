@@ -18,6 +18,8 @@ public:
 
 	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName);
 
+	virtual void RemoveInstance(_In_z_ LPCSTR interfaceTypeName);
+
 	virtual void Remove(_In_z_ LPCSTR interfaceTypeName);
 
 private:

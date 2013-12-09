@@ -12,9 +12,12 @@ public:
 	{
 	};
 
-	virtual std::shared_ptr<void> CreateInstance(const IContainer &container)
+	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const
 	{
-		std::shared_ptr<void> result = make_shared<TResult>(container.GetInstance<TArgs>()...);
+		// when there are no variadic type arguments, the compiler will complain about unreferenced formal parameters
+		UNREFERENCED_PARAMETER(container);
+
+		std::shared_ptr<void> result = std::make_shared<TResult>(container.GetInstance<TArgs>()...);
 
 		return result;
 	};

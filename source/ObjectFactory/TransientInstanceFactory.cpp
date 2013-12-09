@@ -44,6 +44,13 @@ std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContaine
 	return result;
 }
 
+void TransientInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
+{
+	UNREFERENCED_PARAMETER(interfaceTypeName);
+
+	// this method does nothing here because this instance factory does not keep track of instances it has created
+}
+
 void TransientInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
 	_instantiators.erase(interfaceTypeName);

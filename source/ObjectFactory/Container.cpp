@@ -3,22 +3,42 @@
 #include "Container.h"
 
 #include "Lifetimes.h"
-#include "TransientInstanceFactory.h"
+#include "Registry.h"
 #include "SingletonInstanceFactory.h"
 #include "ThreadScopeInstanceFactory.h"
+#include "TransientInstanceFactory.h"
 
-Container::Container()
+Container::Container() :
+	  _factoriesByLifetime()
+	, _factoriesByTypeName()
+	, _injectedInstances()
 {
 	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Singleton] = std::make_shared<SingletonInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Thread] = std::make_shared<ThreadScopeInstanceFactory>();
 }
 
+Container::Container(const Container &other) :
+	  _factoriesByLifetime(other._factoriesByLifetime)
+	, _factoriesByTypeName(other._factoriesByTypeName)
+	, _injectedInstances(other._injectedInstances)
+{
+}
+
 Container::~Container()
 {
-	_factoriesByLifetime.clear();
+}
 
-	_factoriesByTypeName.clear();
+Container &Container::operator =(const Container &other)
+{
+	if (this != &other)
+	{
+		_factoriesByLifetime = other._factoriesByLifetime;
+		_factoriesByTypeName = other._factoriesByTypeName;
+		_injectedInstances = other._injectedInstances;
+	}
+
+	return *this;
 }
 
 void Container::Initialize(_In_ const Registry &registry)
@@ -103,5 +123,8 @@ void Container::EjectAllInstancesOf(_In_z_ LPCSTR interfaceTypeName)
 {
 	_injectedInstances.erase(interfaceTypeName);
 
-	// TODO: forward the Eject call on to each factory so that they can clear their object caches too??
+	for (auto iter = _factoriesByLifetime.cbegin(); iter != _factoriesByLifetime.cend(); iter++)
+	{
+		iter->second->RemoveInstance(interfaceTypeName);
+	}
 }

@@ -27,6 +27,7 @@
     <ClInclude Include="TestImplementation.h">
       <Filter>TestInterface\Impl</Filter>
     </ClInclude>
+    <ClInclude Include="TestThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -48,5 +49,6 @@
       <Filter>TestInterface\Impl</Filter>
     </ClCompile>
     <ClCompile Include="ThreadScopeInstanceFactoryTests.cpp" />
+    <ClCompile Include="TestThread.cpp" />
   </ItemGroup>
 </Project>

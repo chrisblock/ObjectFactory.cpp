@@ -34,7 +34,7 @@
 // This header file declares classes and functions used internally by
 // Google Test.  They are subject to change without notice.
 //
-// This file is #included in <gtest-internal.h>.
+// This file is #included in <gtest/internal/gtest-internal.h>.
 // Do not include this header file separately!
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
@@ -61,11 +61,7 @@ class GTEST_API_ FilePath {
   FilePath() : pathname_("") { }
   FilePath(const FilePath& rhs) : pathname_(rhs.pathname_) { }
 
-  explicit FilePath(const char* pathname) : pathname_(pathname) {
-    Normalize();
-  }
-
-  explicit FilePath(const String& pathname) : pathname_(pathname) {
+  explicit FilePath(const std::string& pathname) : pathname_(pathname) {
     Normalize();
   }
 
@@ -78,7 +74,7 @@ class GTEST_API_ FilePath {
     pathname_ = rhs.pathname_;
   }
 
-  String ToString() const { return pathname_; }
+  const std::string& string() const { return pathname_; }
   const char* c_str() const { return pathname_.c_str(); }
 
   // Returns the current working directory, or "" if unsuccessful.
@@ -111,8 +107,8 @@ class GTEST_API_ FilePath {
                                          const FilePath& base_name,
                                          const char* extension);
 
-  // Returns true iff the path is NULL or "".
-  bool IsEmpty() const { return c_str() == NULL || *c_str() == '\0'; }
+  // Returns true iff the path is "".
+  bool IsEmpty() const { return pathname_.empty(); }
 
   // If input name has a trailing separator character, removes it and returns
   // the name, otherwise return the name string unmodified.
@@ -201,7 +197,7 @@ class GTEST_API_ FilePath {
   // separators. Returns NULL if no path separator was found.
   const char* FindLastPathSeparator() const;
 
-  String pathname_;
+  std::string pathname_;
 };  // class FilePath
 
 }  // namespace internal

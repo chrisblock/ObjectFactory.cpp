@@ -2,9 +2,11 @@
 
 #include "ThreadScopeInstanceFactory.h"
 
+#include <thread>
+
 #include "IInstantiator.h"
 
-std::map<DWORD, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
+std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
 __declspec(thread) std::map<std::string, std::shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(__nullptr);
 
 ThreadScopeInstanceFactory::ThreadScopeInstanceFactory() :
@@ -25,7 +27,7 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 	{
 		std::unique_lock<std::recursive_mutex> lock(_mutex);
 
-		DWORD threadId = ::GetCurrentThreadId();
+		std::thread::id threadId = std::this_thread::get_id();
 
 		auto t = _threads.find(threadId);
 
@@ -96,6 +98,16 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 	}
 
 	return result;
+}
+
+void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
+{
+	if (_instances != __nullptr)
+	{
+		std::unique_lock<std::recursive_mutex> lock(_mutex);
+
+		_instances->erase(interfaceTypeName);
+	}
 }
 
 void ThreadScopeInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)

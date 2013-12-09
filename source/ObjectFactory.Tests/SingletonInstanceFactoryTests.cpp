@@ -48,6 +48,30 @@ TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsRef
 	EXPECT_EQ(one, two);
 }
 
+TEST_F(SingletonInstanceFactoryTests, RemoveInstance_CreationStrategyNotSet_DoesNothing)
+{
+	std::string typeName = typeid (ITestInterface).name();
+
+	EXPECT_NO_THROW(_instanceFactory->RemoveInstance(typeName.c_str()));
+}
+
+TEST_F(SingletonInstanceFactoryTests, RemoveInstance_CreationStrategySet_RemovesInstance)
+{
+	std::string typeName = typeid (ITestInterface).name();
+
+	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	_instanceFactory->RemoveInstance(typeName.c_str());
+
+	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	EXPECT_NE(one, two);
+	EXPECT_EQ(two, three);
+}
+
 TEST_F(SingletonInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)
 {
 	std::string typeName = typeid (ITestInterface).name();

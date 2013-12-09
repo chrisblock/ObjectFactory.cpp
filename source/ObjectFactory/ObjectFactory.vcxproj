@@ -92,11 +92,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Container.h" />
-    <ClInclude Include="DefaultConstructorInstantiator.h" />
     <ClInclude Include="IContainer.h" />
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IInstanceFactory.h" />
     <ClInclude Include="InstantiatorFactory.h" />
+    <ClInclude Include="LambdaInstantiator.h" />
     <ClInclude Include="Lifetimes.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="Registry.h" />
@@ -110,11 +110,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Container.cpp" />
-    <ClCompile Include="DefaultConstructorInstantiator.cpp" />
     <ClCompile Include="IContainer.cpp" />
     <ClCompile Include="IInstantiator.cpp" />
     <ClCompile Include="IInstanceFactory.cpp" />
     <ClCompile Include="InstantiatorFactory.cpp" />
+    <ClCompile Include="LambdaInstantiator.cpp" />
     <ClCompile Include="Lifetimes.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="Registry.cpp" />

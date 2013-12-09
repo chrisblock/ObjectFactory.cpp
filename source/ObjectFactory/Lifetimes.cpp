@@ -6,10 +6,6 @@
 
 std::map<Lifetimes::Lifetime, std::string> Lifetimes::_lifetimeNames;
 
-Lifetimes::Lifetimes()
-{
-}
-
 std::string Lifetimes::GetName(_In_ Lifetime lifetime)
 {
 	if (_lifetimeNames.size() == 0)

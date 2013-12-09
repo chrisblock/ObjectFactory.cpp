@@ -11,14 +11,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gtest-death-test.cc" />
-    <ClCompile Include="gtest-filepath.cc" />
-    <ClCompile Include="gtest-port.cc" />
-    <ClCompile Include="gtest-printers.cc" />
-    <ClCompile Include="gtest-test-part.cc" />
-    <ClCompile Include="gtest-typed-test.cc" />
-    <ClCompile Include="gtest.cc" />
-    <ClCompile Include="gtest_main.cc" />
+    <ClCompile Include="gtest.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest_main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-death-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-filepath.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-port.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-printers.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-test-part.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gtest-typed-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gtest-internal-inl.h">

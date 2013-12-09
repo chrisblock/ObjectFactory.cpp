@@ -15,11 +15,11 @@ public:
 		Thread
 	};
 
+	Lifetimes() = delete;
+	Lifetimes(const Lifetimes &other) = delete;
+
 	static std::string GetName(_In_ Lifetime lifetime);
 
 private:
-	static std::map<Lifetime, std::string> _lifetimeNames;
-
-	Lifetimes();
-	Lifetimes(const Lifetimes &other);
+	static std::map<Lifetimes::Lifetime, std::string> _lifetimeNames;
 };

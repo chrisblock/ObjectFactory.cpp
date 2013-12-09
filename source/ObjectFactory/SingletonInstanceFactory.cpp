@@ -9,8 +9,6 @@ SingletonInstanceFactory::SingletonInstanceFactory() :
 {
 }
 
-_Acquires_exclusive_lock_(this->_mutex)
-_Releases_exclusive_lock_(this->_mutex)
 SingletonInstanceFactory::~SingletonInstanceFactory()
 {
 	std::unique_lock<std::recursive_mutex> lock(_mutex);
@@ -25,8 +23,6 @@ void SingletonInstanceFactory::SetCreationStrategy(_In_z_ LPCSTR interfaceTypeNa
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-_Acquires_exclusive_lock_(this->_mutex)
-_Releases_exclusive_lock_(this->_mutex)
 std::shared_ptr<void> SingletonInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName)
 {
 	std::shared_ptr<void> result;
@@ -66,8 +62,13 @@ std::shared_ptr<void> SingletonInstanceFactory::GetInstance(_In_ const IContaine
 	return result;
 }
 
-_Acquires_exclusive_lock_(this->_mutex)
-_Releases_exclusive_lock_(this->_mutex)
+void SingletonInstanceFactory::RemoveInstance(_In_z_ LPCSTR interfaceTypeName)
+{
+	std::unique_lock<std::recursive_mutex> lock(_mutex);
+
+	_instances.erase(interfaceTypeName);
+}
+
 void SingletonInstanceFactory::Remove(_In_z_ LPCSTR interfaceTypeName)
 {
 	std::unique_lock<std::recursive_mutex> lock(_mutex);

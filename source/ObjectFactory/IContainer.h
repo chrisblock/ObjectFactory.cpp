@@ -1,13 +1,14 @@
 #pragma once
 
 #include <tchar.h>
+#include <functional>
 #include <string>
 
 #include "InstantiatorFactory.h"
 #include "Lifetimes.h"
-#include "Registry.h"
 
 class IInstantiator;
+class Registry;
 
 class IContainer
 {
@@ -21,17 +22,27 @@ public:
 	{
 		static_assert(std::is_base_of<TInterface, TImplementation>::value, "Cannot register types that do not have an inheritence relation.");
 
-		std::shared_ptr<IInstantiator> pImplementationCreator = InstantiatorFactory::CreateInstantiator<TImplementation>();
+		std::shared_ptr<IInstantiator> pInstantiator = InstantiatorFactory::CreateInstantiator<TImplementation>();
 
 		std::string interfaceTypeName = typeid (TInterface).name();
 
-		Register(interfaceTypeName.c_str(), pImplementationCreator, lifetime);
+		Register(interfaceTypeName.c_str(), pInstantiator, lifetime);
 	};
 
 	template <class TConcreteClass>
 	void Register(_In_ const Lifetimes::Lifetime lifetime = Lifetimes::Transient)
 	{
 		Register<TConcreteClass, TConcreteClass>(lifetime);
+	};
+
+	template <class TInterface>
+	void Register(_In_ const std::function<std::shared_ptr<TInterface> (const IContainer &)> &lambda, _In_ const Lifetimes::Lifetime lifetime = Lifetimes::Transient)
+	{
+		std::string interfaceTypeName = typeid (TInterface).name();
+
+		std::shared_ptr<IInstantiator> pInstantiator = InstantiatorFactory::CreateInstantiator<TInterface>(lambda);
+
+		Register(interfaceTypeName.c_str(), pInstantiator, lifetime);
 	};
 
 	template <class T>

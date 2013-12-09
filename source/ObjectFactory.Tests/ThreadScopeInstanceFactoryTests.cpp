@@ -9,6 +9,7 @@
 
 #include "ITestInterface.h"
 #include "TestImplementation.h"
+#include "TestThread.h"
 
 class ThreadScopeInstanceFactoryTests : public testing::Test
 {
@@ -49,52 +50,47 @@ TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsS
 	EXPECT_EQ(one, two);
 }
 
-typedef struct tagThreadArgument
-{
-	shared_ptr<IInstanceFactory> instanceFactory;
-	shared_ptr<IContainer> container;
-} ThreadArgument;
-
-ULONG WINAPI ThreadMain(void *ptr)
-{
-	std::string typeName = typeid (ITestInterface).name();
-
-	ThreadArgument *arg = static_cast<ThreadArgument *>(ptr);
-
-	shared_ptr<void> result = arg->instanceFactory->GetInstance(*(arg->container), typeName.c_str());
-
-	return (ULONG) result.get();
-}
-
 TEST_F(ThreadScopeInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDifferentInstancesOnDifferentThreads)
 {
 	std::string typeName = typeid (ITestInterface).name();
 
 	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	ULONG threadId = 0;
-	ULONG flags = 0;
+	TestThread t(_container, _instanceFactory);
 
-	ThreadArgument arg = { _instanceFactory, _container };
+	t.Start();
 
-	HANDLE thread = ::CreateThread(__nullptr, 0, ThreadMain, &arg, flags, &threadId);
+	t.Stop();
 
-	EXPECT_NE(thread, __nullptr);
+	void *actual = t.GetReturnedInterfacePointer();
 
-	if (thread != __nullptr)
-	{
-		::WaitForSingleObject(thread, INFINITE);
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
-		ULONG result;
+	EXPECT_NE(one.get(), actual);
+}
 
-		::GetExitCodeThread(thread, &result);
+TEST_F(ThreadScopeInstanceFactoryTests, RemoveInstance_CreationStrategyNotSet_DoesNothing)
+{
+	std::string typeName = typeid (ITestInterface).name();
 
-		::CloseHandle(thread);
+	EXPECT_NO_THROW(_instanceFactory->RemoveInstance(typeName.c_str()));
+}
 
-		shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+TEST_F(ThreadScopeInstanceFactoryTests, RemoveInstance_CreationStrategySet_RemovesInstance)
+{
+	std::string typeName = typeid (ITestInterface).name();
 
-		EXPECT_NE((ULONG) one.get(), result);
-	}
+	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+
+	shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	_instanceFactory->RemoveInstance(typeName.c_str());
+
+	shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName.c_str());
+
+	EXPECT_NE(one, two);
+	EXPECT_EQ(two, three);
 }
 
 TEST_F(ThreadScopeInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)

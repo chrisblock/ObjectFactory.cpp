@@ -2,6 +2,7 @@
 
 #include <tchar.h>
 #include <string>
+#include <thread>
 #include <map>
 
 #include "IInstanceFactory.h"
@@ -19,11 +20,13 @@ public:
 
 	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ LPCSTR interfaceTypeName);
 
+	virtual void RemoveInstance(_In_z_ LPCSTR interfaceTypeName);
+
 	virtual void Remove(_In_z_ LPCSTR interfaceTypeName);
 
 private:
 	std::recursive_mutex _mutex;
-	static std::map<DWORD, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> _threads;
+	static std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> _threads;
 	static __declspec(thread) std::map<std::string, std::shared_ptr<void>> *_instances;
 	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 

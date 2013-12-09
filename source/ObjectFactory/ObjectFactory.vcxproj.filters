@@ -47,9 +47,6 @@
     <ClInclude Include="IInstantiator.h">
       <Filter>Instantiator</Filter>
     </ClInclude>
-    <ClInclude Include="DefaultConstructorInstantiator.h">
-      <Filter>Instantiator\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="InstantiatorFactory.h">
       <Filter>Instantiator</Filter>
     </ClInclude>
@@ -62,6 +59,9 @@
       <Filter>Instantiator\Impl</Filter>
     </ClInclude>
     <ClInclude Include="__LOC__.h" />
+    <ClInclude Include="LambdaInstantiator.h">
+      <Filter>Instantiator\Impl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lifetimes.cpp">
@@ -86,9 +86,6 @@
     <ClCompile Include="IInstantiator.cpp">
       <Filter>Instantiator</Filter>
     </ClCompile>
-    <ClCompile Include="DefaultConstructorInstantiator.cpp">
-      <Filter>Instantiator\Impl</Filter>
-    </ClCompile>
     <ClCompile Include="InstantiatorFactory.cpp">
       <Filter>Instantiator</Filter>
     </ClCompile>
@@ -98,6 +95,9 @@
     <ClCompile Include="ObjectFactory.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="VariadicArgumentInstantiator.cpp">
+      <Filter>Instantiator\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="LambdaInstantiator.cpp">
       <Filter>Instantiator\Impl</Filter>
     </ClCompile>
   </ItemGroup>

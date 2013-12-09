@@ -48,6 +48,13 @@ TEST_F(TransientInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsDif
 	EXPECT_NE(one, two);
 }
 
+TEST_F(TransientInstanceFactoryTests, RemoveInstance_CreationStrategyNotSet_DoesNothing)
+{
+	std::string typeName = typeid (ITestInterface).name();
+
+	EXPECT_NO_THROW(_instanceFactory->RemoveInstance(typeName.c_str()));
+}
+
 TEST_F(TransientInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreationStrategyFromTheFactory)
 {
 	std::string typeName = typeid (ITestInterface).name();

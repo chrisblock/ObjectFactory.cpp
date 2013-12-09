@@ -9,12 +9,16 @@
 
 class IInstanceFactory;
 class IInstantiator;
+class Registry;
 
 class Container : public IContainer
 {
 public:
 	Container();
+	Container(const Container &other);
 	virtual ~Container();
+
+	Container &operator =(const Container &other);
 
 	virtual void Initialize(_In_ const Registry &registry);
 

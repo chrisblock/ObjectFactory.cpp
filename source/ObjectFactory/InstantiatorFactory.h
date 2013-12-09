@@ -1,9 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include "IInstantiator.h"
-#include "DefaultConstructorInstantiator.h"
+#include "LambdaInstantiator.h"
 #include "VariadicArgumentInstantiator.h"
 
 class InstantiatorFactory
@@ -12,7 +13,15 @@ public:
 	template <class T>
 	static std::shared_ptr<IInstantiator> CreateInstantiator()
 	{
-		std::shared_ptr<IInstantiator> result = make_shared<DefaultConstructorInstantiator<T>>();
+		std::shared_ptr<IInstantiator> result = make_shared<VariadicArgumentInstantiator<T>>();
+
+		return result;
+	};
+
+	template <class T>
+	static std::shared_ptr<IInstantiator> CreateInstantiator(const std::function<std::shared_ptr<void> (const IContainer &)> &lambda)
+	{
+		std::shared_ptr<IInstantiator> result = make_shared<LambdaInstantiator>(lambda);
 
 		return result;
 	};
