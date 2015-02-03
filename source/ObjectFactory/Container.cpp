@@ -8,6 +8,15 @@
 #include "ThreadScopeInstanceFactory.h"
 #include "TransientInstanceFactory.h"
 
+void swap(Container &left, Container &right)
+{
+	using std::swap;
+
+	swap(left._factoriesByLifetime, right._factoriesByLifetime);
+	swap(left._factoriesByTypeName, right._factoriesByTypeName);
+	swap(left._injectedInstances, right._injectedInstances);
+}
+
 Container::Container() :
 	  _factoriesByLifetime()
 	, _factoriesByTypeName()
@@ -25,18 +34,19 @@ Container::Container(const Container &other) :
 {
 }
 
+Container::Container(Container &&other) :
+	  Container()
+{
+	swap(*this, other);
+}
+
 Container::~Container()
 {
 }
 
-Container &Container::operator =(const Container &other)
+Container &Container::operator =(Container other)
 {
-	if (this != &other)
-	{
-		_factoriesByLifetime = other._factoriesByLifetime;
-		_factoriesByTypeName = other._factoriesByTypeName;
-		_injectedInstances = other._injectedInstances;
-	}
+	swap(*this, other);
 
 	return *this;
 }
@@ -46,7 +56,7 @@ void Container::Initialize(_In_ const Registry &registry)
 	registry.Register(*this);
 }
 
-void Container::Register(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
+void Container::Register(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
 {
 	auto pFactoryPair = _factoriesByLifetime.find(lifetime);
 
@@ -72,14 +82,14 @@ void Container::Register(_In_z_ const char *interfaceTypeName, _In_ const std::s
 	}
 }
 
-void Container::Remove(_In_z_ const char *interfaceTypeName)
+void Container::Remove(_In_ const std::string &interfaceTypeName)
 {
 	_factoriesByLifetime[Lifetimes::Singleton]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Thread]->Remove(interfaceTypeName);
 	_factoriesByLifetime[Lifetimes::Transient]->Remove(interfaceTypeName);
 }
 
-std::shared_ptr<void> Container::GetInstance(_In_z_ const char *interfaceTypeName) const
+std::shared_ptr<void> Container::GetInstance(_In_ const std::string &interfaceTypeName) const
 {
 	std::shared_ptr<void> result;
 
@@ -114,12 +124,12 @@ std::shared_ptr<void> Container::GetInstance(_In_z_ const char *interfaceTypeNam
 	return result;
 }
 
-void Container::Inject(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<void> &instance)
+void Container::Inject(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<void> &instance)
 {
 	_injectedInstances[interfaceTypeName] = instance;
 }
 
-void Container::EjectAllInstancesOf(_In_z_ const char *interfaceTypeName)
+void Container::EjectAllInstancesOf(_In_ const std::string &interfaceTypeName)
 {
 	_injectedInstances.erase(interfaceTypeName);
 

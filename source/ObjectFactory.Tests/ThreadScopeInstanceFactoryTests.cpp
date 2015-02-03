@@ -101,7 +101,7 @@ TEST_F(ThreadScopeInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCre
 
 	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
-	EXPECT_NE(one, __nullptr);
+	EXPECT_NE(one, nullptr);
 
 	_instanceFactory->Remove(typeName.c_str());
 

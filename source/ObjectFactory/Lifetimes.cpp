@@ -2,7 +2,7 @@
 
 #include "Lifetimes.h"
 
-std::string Lifetimes::GetName(_In_ Lifetime lifetime)
+std::string Lifetimes::GetName(_In_ const Lifetime lifetime)
 {
 	std::string result;
 

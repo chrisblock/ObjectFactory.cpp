@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <thread>
 
@@ -15,13 +16,13 @@ public:
 	ThreadScopeInstanceFactory();
 	virtual ~ThreadScopeInstanceFactory();
 
-	virtual void SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
+	virtual void SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
 
-	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName);
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName);
 
-	virtual void RemoveInstance(_In_z_ const char *interfaceTypeName);
+	virtual void RemoveInstance(_In_ const std::string &interfaceTypeName);
 
-	virtual void Remove(_In_z_ const char *interfaceTypeName);
+	virtual void Remove(_In_ const std::string &interfaceTypeName);
 
 private:
 	std::recursive_mutex _mutex;

@@ -63,7 +63,7 @@ TEST_F(TransientInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreat
 
 	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
 
-	EXPECT_NE(one, __nullptr);
+	EXPECT_NE(one, nullptr);
 
 	_instanceFactory->Remove(typeName.c_str());
 

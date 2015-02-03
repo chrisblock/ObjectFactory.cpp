@@ -47,7 +47,7 @@ TEST_F(ContainerTests, GetInstance_RegisteredType_ReturnsInstance)
 {
 	std::shared_ptr<ITestInterface> result = _container->GetInstance<ITestInterface>();
 
-	EXPECT_NE(result, __nullptr);
+	EXPECT_NE(result, nullptr);
 }
 
 TEST_F(ContainerTests, Inject_InstanceOfType_InjectedInstanceIsReturned)

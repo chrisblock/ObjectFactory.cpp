@@ -4,8 +4,25 @@
 
 #include "IInstantiator.h"
 
+void swap(TransientInstanceFactory &left, TransientInstanceFactory &right)
+{
+	using std::swap;
+
+	swap(left._instantiators, right._instantiators);
+}
+
 TransientInstanceFactory::TransientInstanceFactory()
 {
+}
+
+TransientInstanceFactory::TransientInstanceFactory(const TransientInstanceFactory &other) :
+	  _instantiators(other._instantiators)
+{
+}
+
+TransientInstanceFactory::TransientInstanceFactory(TransientInstanceFactory &&other)
+{
+	swap(*this, other);
 }
 
 TransientInstanceFactory::~TransientInstanceFactory()
@@ -13,12 +30,19 @@ TransientInstanceFactory::~TransientInstanceFactory()
 	_instantiators.clear();
 }
 
-void TransientInstanceFactory::SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
+TransientInstanceFactory &TransientInstanceFactory::operator =(TransientInstanceFactory other)
+{
+	swap(*this, other);
+
+	return *this;
+}
+
+void TransientInstanceFactory::SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName)
+std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName)
 {
 	std::shared_ptr<void> result;
 
@@ -44,12 +68,12 @@ std::shared_ptr<void> TransientInstanceFactory::GetInstance(_In_ const IContaine
 	return result;
 }
 
-void TransientInstanceFactory::RemoveInstance(_In_z_ const char *)
+void TransientInstanceFactory::RemoveInstance(_In_ const std::string &)
 {
 	// this method does nothing here because this instance factory does not keep track of instances it has created
 }
 
-void TransientInstanceFactory::Remove(_In_z_ const char *interfaceTypeName)
+void TransientInstanceFactory::Remove(_In_ const std::string &interfaceTypeName)
 {
 	_instantiators.erase(interfaceTypeName);
 }

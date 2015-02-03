@@ -20,18 +20,22 @@ public:
 	template <typename TInterface, class TImplementation>
 	void Register(_In_ const Lifetimes::Lifetime lifetime = Lifetimes::Transient)
 	{
+		static_assert(std::has_virtual_destructor<TInterface>::value, "Type does not have a virtual destuctor. It cannot be registered with ObjectFactory.");
 		static_assert(std::is_base_of<TInterface, TImplementation>::value, "Cannot register types that do not have an inheritence relation.");
+		static_assert(std::is_abstract<TImplementation>::value == false, "Cannot register an abstract class with ObjectFactory.");
 
 		std::shared_ptr<IInstantiator> pInstantiator = InstantiatorFactory::CreateInstantiator<TImplementation>();
 
 		std::string interfaceTypeName = typeid (TInterface).name();
 
-		Register(interfaceTypeName.c_str(), pInstantiator, lifetime);
+		Register(interfaceTypeName, pInstantiator, lifetime);
 	};
 
 	template <typename TConcreteClass>
 	void Register(_In_ const Lifetimes::Lifetime lifetime = Lifetimes::Transient)
 	{
+		static_assert(std::is_abstract<TConcreteClass>::value == false, "Cannot register an abstract class with ObjectFactory.");
+
 		Register<TConcreteClass, TConcreteClass>(lifetime);
 	};
 
@@ -42,7 +46,7 @@ public:
 
 		std::shared_ptr<IInstantiator> pInstantiator = InstantiatorFactory::CreateInstantiator<TInterface>(lambda);
 
-		Register(interfaceTypeName.c_str(), pInstantiator, lifetime);
+		Register(interfaceTypeName, pInstantiator, lifetime);
 	};
 
 	template <typename T>
@@ -68,12 +72,12 @@ public:
 	{
 		std::string interfaceTypeName = typeid (T).name();
 
-		EjectAllInstancesOf(interfaceTypeName.c_str());
+		EjectAllInstancesOf(interfaceTypeName);
 	};
 
 protected:
-	virtual void Register(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime) = 0;
-	virtual std::shared_ptr<void> GetInstance(_In_z_ const char *interfaceTypeName) const = 0;
-	virtual void Inject(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<void> &instance) = 0;
-	virtual void EjectAllInstancesOf(_In_z_ const char *interfaceTypeName) = 0;
+	virtual void Register(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime) = 0;
+	virtual std::shared_ptr<void> GetInstance(_In_ const std::string &interfaceTypeName) const = 0;
+	virtual void Inject(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<void> &instance) = 0;
+	virtual void EjectAllInstancesOf(_In_ const std::string &interfaceTypeName) = 0;
 };

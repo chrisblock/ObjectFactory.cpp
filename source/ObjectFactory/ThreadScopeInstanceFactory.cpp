@@ -7,7 +7,7 @@
 #include "IInstantiator.h"
 
 std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
-__declspec(thread) std::map<std::string, std::shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(__nullptr);
+__declspec(thread) std::map<std::string, std::shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(nullptr);
 
 ThreadScopeInstanceFactory::ThreadScopeInstanceFactory() :
 	  _mutex()
@@ -16,20 +16,20 @@ ThreadScopeInstanceFactory::ThreadScopeInstanceFactory() :
 
 ThreadScopeInstanceFactory::~ThreadScopeInstanceFactory()
 {
-	_instances = __nullptr;
+	_instances = nullptr;
 	_threads.clear();
 	_instantiators.clear();
 }
 
 void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 {
-	if (_instances == __nullptr)
+	if (_instances == nullptr)
 	{
 		std::unique_lock<std::recursive_mutex> lock(_mutex);
 
 		std::thread::id threadId = std::this_thread::get_id();
 
-		auto t = _threads.find(threadId);
+		std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>>::const_iterator t = _threads.find(threadId);
 
 		if (t == _threads.end())
 		{
@@ -54,12 +54,12 @@ void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
 	}
 }
 
-void ThreadScopeInstanceFactory::SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
+void ThreadScopeInstanceFactory::SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
 {
 	_instantiators[interfaceTypeName] = instantiator;
 }
 
-std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName)
+std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName)
 {
 	std::shared_ptr<void> result;
 
@@ -67,11 +67,11 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 
 	std::map<std::string, std::shared_ptr<void>> &instances = *_instances;
 
-	auto instance = instances.find(interfaceTypeName);
+	std::map<std::string, std::shared_ptr<void>>::const_iterator instance = instances.find(interfaceTypeName);
 
 	if (instance == instances.end())
 	{
-		auto instantiator = _instantiators.find(interfaceTypeName);
+		std::map<std::string, std::shared_ptr<IInstantiator>>::const_iterator instantiator = _instantiators.find(interfaceTypeName);
 
 		if (instantiator == _instantiators.end())
 		{
@@ -85,7 +85,7 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 		}
 		else
 		{
-			auto creator = instantiator->second;
+			std::shared_ptr<IInstantiator> creator = instantiator->second;
 
 			result = creator->CreateInstance(container);
 
@@ -100,9 +100,9 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 	return result;
 }
 
-void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ const char *interfaceTypeName)
+void ThreadScopeInstanceFactory::RemoveInstance(_In_ const std::string &interfaceTypeName)
 {
-	if (_instances != __nullptr)
+	if (_instances != nullptr)
 	{
 		std::unique_lock<std::recursive_mutex> lock(_mutex);
 
@@ -110,9 +110,9 @@ void ThreadScopeInstanceFactory::RemoveInstance(_In_z_ const char *interfaceType
 	}
 }
 
-void ThreadScopeInstanceFactory::Remove(_In_z_ const char *interfaceTypeName)
+void ThreadScopeInstanceFactory::Remove(_In_ const std::string &interfaceTypeName)
 {
-	if (_instances != __nullptr)
+	if (_instances != nullptr)
 	{
 		std::unique_lock<std::recursive_mutex> lock(_mutex);
 

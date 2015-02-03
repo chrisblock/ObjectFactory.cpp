@@ -8,7 +8,7 @@
 class ITestInterface;
 
 TestThread::TestThread(const std::shared_ptr<IContainer> &container, const std::shared_ptr<IInstanceFactory> &instanceFactory) :
-	  _interfacePointer(__nullptr)
+	  _interfacePointer(nullptr)
 	, _container(container)
 	, _instanceFactory(instanceFactory)
 {

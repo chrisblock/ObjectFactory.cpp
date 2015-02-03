@@ -39,6 +39,6 @@ TEST_F(ConstructorInjectionTests, InterfaceRegistered_InstantiatorMacroUsedForCo
 {
 	std::shared_ptr<IConstructorInjectedInterface> one = ObjectFactory::GetInstance<IConstructorInjectedInterface>();
 
-	EXPECT_NE(__nullptr, one);
-	EXPECT_NE(__nullptr, one->GetTestInterface());
+	EXPECT_NE(nullptr, one);
+	EXPECT_NE(nullptr, one->GetTestInterface());
 }

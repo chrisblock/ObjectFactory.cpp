@@ -8,8 +8,29 @@ template <typename TResult, typename... TArgs>
 class VariadicArgumentInstantiator : public IInstantiator
 {
 public:
+	VariadicArgumentInstantiator()
+	{
+	};
+
+	VariadicArgumentInstantiator(const VariadicArgumentInstantiator &other)
+	{
+		other;
+	};
+
+	VariadicArgumentInstantiator(VariadicArgumentInstantiator &&other)
+	{
+		other;
+	};
+
 	virtual ~VariadicArgumentInstantiator()
 	{
+	};
+
+	VariadicArgumentInstantiator &operator =(VariadicArgumentInstantiator other)
+	{
+		other;
+
+		return &this;
 	};
 
 	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const

@@ -51,4 +51,7 @@
     <ClCompile Include="ThreadScopeInstanceFactoryTests.cpp" />
     <ClCompile Include="TestThread.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

@@ -10,6 +10,12 @@
 class InstantiatorFactory
 {
 public:
+	InstantiatorFactory() = delete;
+	InstantiatorFactory(const InstantiatorFactory &other) = delete;
+	InstantiatorFactory(InstantiatorFactory &&other) = delete;
+
+	InstantiatorFactory &operator =(InstantiatorFactory other) = delete;
+
 	template <typename T>
 	static std::shared_ptr<IInstantiator> CreateInstantiator()
 	{
@@ -25,9 +31,6 @@ public:
 
 		return result;
 	};
-
-private:
-	InstantiatorFactory();
 };
 
 #define DECLARE_INSTANTIATOR(TypeName) template <> std::shared_ptr<IInstantiator> InstantiatorFactory::CreateInstantiator<TypeName>()

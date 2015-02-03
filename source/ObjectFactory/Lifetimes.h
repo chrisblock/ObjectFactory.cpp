@@ -14,6 +14,7 @@ public:
 
 	Lifetimes() = delete;
 	Lifetimes(const Lifetimes &other) = delete;
+	Lifetimes(Lifetimes &&other) = delete;
 
-	static std::string GetName(_In_ Lifetime lifetime);
+	static std::string GetName(_In_ const Lifetime lifetime);
 };

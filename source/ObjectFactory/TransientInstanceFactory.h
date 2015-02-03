@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include "IInstanceFactory.h"
@@ -11,16 +12,24 @@ class TransientInstanceFactory : public IInstanceFactory
 {
 public:
 	TransientInstanceFactory();
+	TransientInstanceFactory(const TransientInstanceFactory &other);
+	TransientInstanceFactory(TransientInstanceFactory &&other);
 	virtual ~TransientInstanceFactory();
 
-	virtual void SetCreationStrategy(_In_z_ const char *interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
+	TransientInstanceFactory &operator =(TransientInstanceFactory other);
 
-	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_z_ const char *interfaceTypeName);
+	friend void swap(TransientInstanceFactory &left, TransientInstanceFactory &right);
 
-	virtual void RemoveInstance(_In_z_ const char *interfaceTypeName);
+	virtual void SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
 
-	virtual void Remove(_In_z_ const char *interfaceTypeName);
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName);
+
+	virtual void RemoveInstance(_In_ const std::string &interfaceTypeName);
+
+	virtual void Remove(_In_ const std::string &interfaceTypeName);
 
 private:
 	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 };
+
+void swap(TransientInstanceFactory &left, TransientInstanceFactory &right);
