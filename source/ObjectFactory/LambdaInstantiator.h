@@ -19,7 +19,7 @@ public:
 
 	friend void swap(LambdaInstantiator &left, LambdaInstantiator &right);
 
-	virtual std::shared_ptr<void> CreateInstance(_In_ const IContainer &container) const;
+	virtual std::shared_ptr<void> CreateInstance(_In_ const IContainer &container) const override;
 
 private:
 	std::function<std::shared_ptr<void> (const IContainer &)> _lambda;

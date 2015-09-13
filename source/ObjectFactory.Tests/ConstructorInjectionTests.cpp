@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include <Container.h>
 #include <IContainer.h>
 #include <Registry.h>
-#include <ObjectFactory.h>
 
 #include "ITestInterface.h"
 #include "TestImplementation.h"
@@ -11,7 +11,7 @@
 class ConstructorInjectionTestRegistry : public Registry
 {
 public:
-	virtual void Register(IContainer &container) const
+	virtual void Register(IContainer &container) const override
 	{
 		container.Register<ITestInterface, TestImplementation>(Lifetimes::Transient);
 		container.Register<IConstructorInjectedInterface, ConstructorInjectedImplementation>(Lifetimes::Singleton);
@@ -21,15 +21,17 @@ public:
 class ConstructorInjectionTests : public testing::Test
 {
 protected:
-	virtual void SetUp()
+	virtual void SetUp() override
 	{
-		ObjectFactory::Initialize(_registry);
+		_container = std::make_shared<Container>(_registry);
 	};
 
-	virtual void TearDown()
+	virtual void TearDown() override
 	{
-		ObjectFactory::Clear();
+		_container.reset();
 	};
+
+	std::shared_ptr<IContainer> _container;
 
 private:
 	ConstructorInjectionTestRegistry _registry;
@@ -37,7 +39,7 @@ private:
 
 TEST_F(ConstructorInjectionTests, InterfaceRegistered_InstantiatorMacroUsedForConstructorInjection_ReturnsInstanceWithInjectedMemberInstance)
 {
-	std::shared_ptr<IConstructorInjectedInterface> one = ObjectFactory::GetInstance<IConstructorInjectedInterface>();
+	std::shared_ptr<IConstructorInjectedInterface> one = _container->GetInstance<IConstructorInjectedInterface>();
 
 	EXPECT_NE(nullptr, one);
 	EXPECT_NE(nullptr, one->GetTestInterface());

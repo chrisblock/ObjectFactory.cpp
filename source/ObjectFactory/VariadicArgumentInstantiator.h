@@ -33,7 +33,7 @@ public:
 		return &this;
 	};
 
-	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const
+	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const override
 	{
 		// when there are no variadic type arguments, the compiler will complain about unreferenced formal parameters
 		container;

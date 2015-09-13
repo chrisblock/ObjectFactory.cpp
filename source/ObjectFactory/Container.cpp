@@ -27,6 +27,12 @@ Container::Container() :
 	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
 }
 
+Container::Container(const Registry &registry) :
+	  Container()
+{
+	registry.Register(*this);
+}
+
 Container::Container(const Container &other) :
 	  _factoriesByLifetime(other._factoriesByLifetime)
 	, _factoriesByTypeName(other._factoriesByTypeName)

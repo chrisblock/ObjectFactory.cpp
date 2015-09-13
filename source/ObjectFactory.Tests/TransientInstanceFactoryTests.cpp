@@ -2,7 +2,6 @@
 
 #include <IContainer.h>
 #include <Container.h>
-#include <Registry.h>
 #include <IInstanceFactory.h>
 #include <TransientInstanceFactory.h>
 
@@ -15,14 +14,14 @@ protected:
 	std::shared_ptr<IContainer> _container;
 	std::shared_ptr<IInstanceFactory> _instanceFactory;
 
-	virtual void SetUp()
+	virtual void SetUp() override
 	{
 		_container = std::make_shared<Container>();
 
 		_instanceFactory = std::make_shared<TransientInstanceFactory>();
 	};
 
-	virtual void TearDown()
+	virtual void TearDown() override
 	{
 		_container.reset();
 		_instanceFactory.reset();

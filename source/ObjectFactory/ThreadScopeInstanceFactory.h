@@ -3,7 +3,6 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <thread>
 
 #include "IInstanceFactory.h"
 
@@ -14,21 +13,25 @@ class ThreadScopeInstanceFactory : public IInstanceFactory
 {
 public:
 	ThreadScopeInstanceFactory();
+	ThreadScopeInstanceFactory(const ThreadScopeInstanceFactory &other);
+	ThreadScopeInstanceFactory(ThreadScopeInstanceFactory &&other);
 	virtual ~ThreadScopeInstanceFactory();
 
-	virtual void SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator);
+	ThreadScopeInstanceFactory &operator =(ThreadScopeInstanceFactory other);
 
-	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName);
+	friend void swap(ThreadScopeInstanceFactory &left, ThreadScopeInstanceFactory &right);
 
-	virtual void RemoveInstance(_In_ const std::string &interfaceTypeName);
+	virtual void SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator) override;
 
-	virtual void Remove(_In_ const std::string &interfaceTypeName);
+	virtual std::shared_ptr<void> GetInstance(_In_ const IContainer &container, _In_ const std::string &interfaceTypeName) override;
+
+	virtual void RemoveInstance(_In_ const std::string &interfaceTypeName) override;
+
+	virtual void Remove(_In_ const std::string &interfaceTypeName) override;
 
 private:
-	std::recursive_mutex _mutex;
-	static std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> _threads;
-	static __declspec(thread) std::map<std::string, std::shared_ptr<void>> *_instances;
+	static thread_local std::map<std::string, std::shared_ptr<void>> _instances;
 	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
-
-	void EnsureThreadLocalStorageInstancesCacheExists();
 };
+
+void swap(ThreadScopeInstanceFactory &left, ThreadScopeInstanceFactory &right);

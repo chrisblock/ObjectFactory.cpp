@@ -7,4 +7,4 @@
 #include <mutex>
 #include <string>
 
-#include <gtest\gtest.h>
+#include <gtest.h>

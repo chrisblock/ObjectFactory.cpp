@@ -2,56 +2,42 @@
 
 #include "ThreadScopeInstanceFactory.h"
 
-#include <thread>
-
 #include "IInstantiator.h"
 
-std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>> ThreadScopeInstanceFactory::_threads;
-__declspec(thread) std::map<std::string, std::shared_ptr<void>> *ThreadScopeInstanceFactory::_instances(nullptr);
+thread_local std::map<std::string, std::shared_ptr<void>> ThreadScopeInstanceFactory::_instances;
 
-ThreadScopeInstanceFactory::ThreadScopeInstanceFactory() :
-	  _mutex()
+void swap(ThreadScopeInstanceFactory &left, ThreadScopeInstanceFactory &right)
 {
+	using std::swap;
+
+	swap(left._instantiators, right._instantiators);
+}
+
+ThreadScopeInstanceFactory::ThreadScopeInstanceFactory()
+{
+}
+
+ThreadScopeInstanceFactory::ThreadScopeInstanceFactory(const ThreadScopeInstanceFactory &other) :
+	  _instantiators(other._instantiators)
+{
+}
+
+ThreadScopeInstanceFactory::ThreadScopeInstanceFactory(ThreadScopeInstanceFactory &&other) :
+	  ThreadScopeInstanceFactory()
+{
+	swap(*this, other);
 }
 
 ThreadScopeInstanceFactory::~ThreadScopeInstanceFactory()
 {
-	_instances = nullptr;
-	_threads.clear();
 	_instantiators.clear();
 }
 
-void ThreadScopeInstanceFactory::EnsureThreadLocalStorageInstancesCacheExists()
+ThreadScopeInstanceFactory &ThreadScopeInstanceFactory::operator =(ThreadScopeInstanceFactory other)
 {
-	if (_instances == nullptr)
-	{
-		std::unique_lock<std::recursive_mutex> lock(_mutex);
+	swap(*this, other);
 
-		std::thread::id threadId = std::this_thread::get_id();
-
-		std::map<std::thread::id, std::shared_ptr<std::map<std::string, std::shared_ptr<void>>>>::const_iterator t = _threads.find(threadId);
-
-		if (t == _threads.end())
-		{
-			std::shared_ptr<std::map<std::string, std::shared_ptr<void>>> threadInstances = std::make_shared<std::map<std::string, std::shared_ptr<void>>>();
-
-			_threads[threadId] = threadInstances;
-
-			_instances = threadInstances.get();
-		}
-		else
-		{
-			// this happens in the case of thread id re-use..
-			// here, we should assume the TLS member is more trustworthy than
-			// the value stored in the static map because of thread id re-use
-
-			std::shared_ptr<std::map<std::string, std::shared_ptr<void>>> threadInstances = std::make_shared<std::map<std::string, std::shared_ptr<void>>>();
-
-			_threads[threadId] = threadInstances;
-
-			_instances = threadInstances.get();
-		}
-	}
+	return *this;
 }
 
 void ThreadScopeInstanceFactory::SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator)
@@ -63,13 +49,9 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 {
 	std::shared_ptr<void> result;
 
-	EnsureThreadLocalStorageInstancesCacheExists();
+	std::map<std::string, std::shared_ptr<void>>::const_iterator instance = _instances.find(interfaceTypeName);
 
-	std::map<std::string, std::shared_ptr<void>> &instances = *_instances;
-
-	std::map<std::string, std::shared_ptr<void>>::const_iterator instance = instances.find(interfaceTypeName);
-
-	if (instance == instances.end())
+	if (instance == _instances.end())
 	{
 		std::map<std::string, std::shared_ptr<IInstantiator>>::const_iterator instantiator = _instantiators.find(interfaceTypeName);
 
@@ -89,7 +71,7 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 
 			result = creator->CreateInstance(container);
 
-			instances[interfaceTypeName] = result;
+			_instances[interfaceTypeName] = result;
 		}
 	}
 	else
@@ -102,21 +84,11 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 
 void ThreadScopeInstanceFactory::RemoveInstance(_In_ const std::string &interfaceTypeName)
 {
-	if (_instances != nullptr)
-	{
-		std::unique_lock<std::recursive_mutex> lock(_mutex);
-
-		_instances->erase(interfaceTypeName);
-	}
+	_instances.erase(interfaceTypeName);
 }
 
 void ThreadScopeInstanceFactory::Remove(_In_ const std::string &interfaceTypeName)
 {
-	if (_instances != nullptr)
-	{
-		std::unique_lock<std::recursive_mutex> lock(_mutex);
-
-		_instances->erase(interfaceTypeName);
-		_instantiators.erase(interfaceTypeName);
-	}
+	_instances.erase(interfaceTypeName);
+	_instantiators.erase(interfaceTypeName);
 }

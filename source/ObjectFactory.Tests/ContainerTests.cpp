@@ -11,7 +11,7 @@
 class ContainerTestRegistry : public Registry
 {
 public:
-	virtual void Register(IContainer &container) const
+	virtual void Register(IContainer &container) const override
 	{
 		container.Register<ITestInterface, TestImplementation>(Lifetimes::Transient);
 	};
@@ -22,14 +22,12 @@ class ContainerTests : public testing::Test
 protected:
 	std::shared_ptr<IContainer> _container;
 
-	virtual void SetUp()
+	virtual void SetUp() override
 	{
-		_container = std::make_shared<Container>();
-
-		_container->Initialize(_registry);
+		_container = std::make_shared<Container>(_registry);
 	};
 
-	virtual void TearDown()
+	virtual void TearDown() override
 	{
 		_container.reset();
 	};

@@ -20,7 +20,7 @@ TestThread::~TestThread()
 
 void TestThread::Start()
 {
-	_thread = std::thread([this]() { ThreadMain(); });
+	_thread = std::thread([this] () { ThreadMain(); });
 }
 
 void TestThread::Stop()
@@ -44,4 +44,3 @@ void TestThread::ThreadMain()
 
 	_interfacePointer = result.get();
 }
-
