@@ -1,15 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="TestInterface">
       <UniqueIdentifier>{f69f8c7a-1a2d-4cb4-81bb-cae42b185c37}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestInterface\Impl">
       <UniqueIdentifier>{599549c2-f2bc-4b15-bb20-a955d9b8e1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContainerTests">
+      <UniqueIdentifier>{7c1b7988-99b9-4c3c-96e1-ef41721066b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VariadicArgumentInstantiatorTests">
+      <UniqueIdentifier>{9a6c781b-36dd-4cca-89fc-da89c88b945a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LambdaInstantiatorTests">
+      <UniqueIdentifier>{eebfa692-c460-44a3-b470-8ad51c35ae20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InstantiatorFactoryTests">
+      <UniqueIdentifier>{95e14c49-49c5-4e74-8ff6-06295064ce12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DependencyGraphNodeTests">
+      <UniqueIdentifier>{8e2e765b-dcd0-4dd3-93b7-7b5590556f18}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,27 +39,58 @@
       <Filter>TestInterface\Impl</Filter>
     </ClInclude>
     <ClInclude Include="TestThread.h" />
+    <ClInclude Include="ClassWithConstContainerDependency.h">
+      <Filter>TestInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleRegistry.h">
+      <Filter>TestInterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ObjectFactory.Tests.cpp" />
     <ClCompile Include="SingletonInstanceFactoryTests.cpp" />
     <ClCompile Include="TransientInstanceFactoryTests.cpp" />
-    <ClCompile Include="ConstructorInjectionTests.cpp" />
-    <ClCompile Include="ContainerTests.cpp" />
     <ClCompile Include="ConstructorInjectedImplementation.cpp">
       <Filter>TestInterface\Impl</Filter>
-    </ClCompile>
-    <ClCompile Include="IConstructorInjectedInterface.cpp">
-      <Filter>TestInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="ITestInterface.cpp">
-      <Filter>TestInterface</Filter>
     </ClCompile>
     <ClCompile Include="TestImplementation.cpp">
       <Filter>TestInterface\Impl</Filter>
     </ClCompile>
     <ClCompile Include="ThreadScopeInstanceFactoryTests.cpp" />
     <ClCompile Include="TestThread.cpp" />
+    <ClCompile Include="Given_type_with_const_IContainer_dependency.cpp">
+      <Filter>ContainerTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_with_no_dependencies.cpp">
+      <Filter>VariadicArgumentInstantiatorTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_with_dependencies.cpp">
+      <Filter>VariadicArgumentInstantiatorTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_with_primitive_dependency.cpp">
+      <Filter>LambdaInstantiatorTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_with_both_primitive_and_class_dependency.cpp">
+      <Filter>LambdaInstantiatorTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_with_lambda_instantiator.cpp">
+      <Filter>InstantiatorFactoryTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_single_node.cpp">
+      <Filter>DependencyGraphNodeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_that_is_not_registered.cpp">
+      <Filter>ContainerTests</Filter>
+    </ClCompile>
+    <ClCompile Include="Given_type_that_is_registered_with_an_interface.cpp">
+      <Filter>ContainerTests</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassWithConstContainerDependency.cpp">
+      <Filter>TestInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstructorInjectionTests.cpp">
+      <Filter>ContainerTests</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Container.h" />
+    <ClInclude Include="DependencyGraphNode.h" />
     <ClInclude Include="IContainer.h" />
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IInstanceFactory.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="LambdaInstantiator.h" />
     <ClInclude Include="Lifetimes.h" />
     <ClInclude Include="ObjectFactory.h" />
+    <ClInclude Include="RegisteredComponent.h" />
     <ClInclude Include="Registry.h" />
     <ClInclude Include="SingletonInstanceFactory.h" />
     <ClInclude Include="stdafx.h" />
@@ -110,14 +112,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Container.cpp" />
-    <ClCompile Include="IContainer.cpp" />
-    <ClCompile Include="IInstantiator.cpp" />
-    <ClCompile Include="IInstanceFactory.cpp" />
-    <ClCompile Include="InstantiatorFactory.cpp" />
-    <ClCompile Include="LambdaInstantiator.cpp" />
+    <ClCompile Include="DependencyGraphNode.cpp" />
     <ClCompile Include="Lifetimes.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
-    <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="RegisteredComponent.cpp" />
     <ClCompile Include="SingletonInstanceFactory.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -125,7 +123,6 @@
     </ClCompile>
     <ClCompile Include="ThreadScopeInstanceFactory.cpp" />
     <ClCompile Include="TransientInstanceFactory.cpp" />
-    <ClCompile Include="VariadicArgumentInstantiator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

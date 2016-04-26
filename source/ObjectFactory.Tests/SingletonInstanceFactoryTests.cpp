@@ -8,7 +8,7 @@
 #include "ITestInterface.h"
 #include "TestImplementation.h"
 
-class SingletonInstanceFactoryTests : public testing::Test
+class SingletonInstanceFactoryTests : public ::testing::Test
 {
 protected:
 	std::shared_ptr<IContainer> _container;
@@ -32,17 +32,17 @@ TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategyNotSet_ThrowsE
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName), std::exception);
 }
 
 TEST_F(SingletonInstanceFactoryTests, GetInstance_CreationStrategySet_ReturnsReferenceToSameInstance)
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+	_instanceFactory->SetCreationStrategy(typeName, InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
-	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName);
+	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName);
 
 	EXPECT_EQ(one, two);
 }
@@ -51,21 +51,21 @@ TEST_F(SingletonInstanceFactoryTests, RemoveInstance_CreationStrategyNotSet_Does
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	EXPECT_NO_THROW(_instanceFactory->RemoveInstance(typeName.c_str()));
+	EXPECT_NO_THROW(_instanceFactory->RemoveInstance(typeName));
 }
 
 TEST_F(SingletonInstanceFactoryTests, RemoveInstance_CreationStrategySet_RemovesInstance)
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+	_instanceFactory->SetCreationStrategy(typeName, InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName);
 
-	_instanceFactory->RemoveInstance(typeName.c_str());
+	_instanceFactory->RemoveInstance(typeName);
 
-	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName.c_str());
-	std::shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> two = _instanceFactory->GetInstance(*_container, typeName);
+	std::shared_ptr<void> three = _instanceFactory->GetInstance(*_container, typeName);
 
 	EXPECT_NE(one, two);
 	EXPECT_EQ(two, three);
@@ -75,13 +75,13 @@ TEST_F(SingletonInstanceFactoryTests, Remove_CreationStrategySet_RemovesTheCreat
 {
 	std::string typeName = typeid (ITestInterface).name();
 
-	_instanceFactory->SetCreationStrategy(typeName.c_str(), InstantiatorFactory::CreateInstantiator<TestImplementation>());
+	_instanceFactory->SetCreationStrategy(typeName, InstantiatorFactory::CreateInstantiator<TestImplementation>());
 
-	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName.c_str());
+	std::shared_ptr<void> one = _instanceFactory->GetInstance(*_container, typeName);
 
 	EXPECT_NE(one, nullptr);
 
-	_instanceFactory->Remove(typeName.c_str());
+	_instanceFactory->Remove(typeName);
 
-	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName.c_str()), std::exception);
+	EXPECT_THROW(_instanceFactory->GetInstance(*_container, typeName), std::exception);
 }

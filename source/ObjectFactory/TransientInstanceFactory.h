@@ -1,8 +1,8 @@
 #pragma once
 
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "IInstanceFactory.h"
 
@@ -28,8 +28,10 @@ public:
 
 	virtual void Remove(_In_ const std::string &interfaceTypeName) override;
 
+	virtual std::vector<RegisteredComponent> GetRegisteredComponents() const override;
+
 private:
-	std::map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
+	std::unordered_map<std::string, std::shared_ptr<IInstantiator>> _instantiators;
 };
 
 void swap(TransientInstanceFactory &left, TransientInstanceFactory &right);

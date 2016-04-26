@@ -3,8 +3,10 @@
 #include "ThreadScopeInstanceFactory.h"
 
 #include "IInstantiator.h"
+#include "Lifetimes.h"
+#include "RegisteredComponent.h"
 
-thread_local std::map<std::string, std::shared_ptr<void>> ThreadScopeInstanceFactory::_instances;
+thread_local std::unordered_map<std::string, std::shared_ptr<void>> ThreadScopeInstanceFactory::_instances;
 
 void swap(ThreadScopeInstanceFactory &left, ThreadScopeInstanceFactory &right)
 {
@@ -49,11 +51,11 @@ std::shared_ptr<void> ThreadScopeInstanceFactory::GetInstance(_In_ const IContai
 {
 	std::shared_ptr<void> result;
 
-	std::map<std::string, std::shared_ptr<void>>::const_iterator instance = _instances.find(interfaceTypeName);
+	auto instance = _instances.find(interfaceTypeName);
 
 	if (instance == _instances.end())
 	{
-		std::map<std::string, std::shared_ptr<IInstantiator>>::const_iterator instantiator = _instantiators.find(interfaceTypeName);
+		auto instantiator = _instantiators.find(interfaceTypeName);
 
 		if (instantiator == _instantiators.end())
 		{
@@ -91,4 +93,18 @@ void ThreadScopeInstanceFactory::Remove(_In_ const std::string &interfaceTypeNam
 {
 	_instances.erase(interfaceTypeName);
 	_instantiators.erase(interfaceTypeName);
+}
+
+std::vector<RegisteredComponent> ThreadScopeInstanceFactory::GetRegisteredComponents() const
+{
+	std::vector<RegisteredComponent> result;
+
+	result.reserve(_instantiators.size());
+
+	for (const std::pair<std::string, std::shared_ptr<IInstantiator>> &pair : _instantiators)
+	{
+		result.emplace_back(pair.first, pair.second->GetType(), Lifetimes::GetName(Lifetimes::Thread));
+	}
+
+	return result;
 }

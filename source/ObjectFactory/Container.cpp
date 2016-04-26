@@ -3,12 +3,13 @@
 #include "Container.h"
 
 #include "Lifetimes.h"
+#include "RegisteredComponent.h"
 #include "Registry.h"
 #include "SingletonInstanceFactory.h"
 #include "ThreadScopeInstanceFactory.h"
 #include "TransientInstanceFactory.h"
 
-void swap(Container &left, Container &right)
+void swap(_Inout_ Container &left, _Inout_ Container &right)
 {
 	using std::swap;
 
@@ -18,29 +19,29 @@ void swap(Container &left, Container &right)
 }
 
 Container::Container() :
-	  _factoriesByLifetime()
+	  _injectedInstances()
+	, _factoriesByLifetime()
 	, _factoriesByTypeName()
-	, _injectedInstances()
 {
 	_factoriesByLifetime[Lifetimes::Singleton] = std::make_shared<SingletonInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Thread] = std::make_shared<ThreadScopeInstanceFactory>();
 	_factoriesByLifetime[Lifetimes::Transient] = std::make_shared<TransientInstanceFactory>();
 }
 
-Container::Container(const Registry &registry) :
+Container::Container(_In_ const Registry &registry) :
 	  Container()
 {
 	registry.Register(*this);
 }
 
-Container::Container(const Container &other) :
-	  _factoriesByLifetime(other._factoriesByLifetime)
+Container::Container(_In_ const Container &other) :
+	  _injectedInstances(other._injectedInstances)
+	, _factoriesByLifetime(other._factoriesByLifetime)
 	, _factoriesByTypeName(other._factoriesByTypeName)
-	, _injectedInstances(other._injectedInstances)
 {
 }
 
-Container::Container(Container &&other) :
+Container::Container(_In_ Container &&other) :
 	  Container()
 {
 	swap(*this, other);
@@ -50,7 +51,7 @@ Container::~Container()
 {
 }
 
-Container &Container::operator =(Container other)
+Container &Container::operator =(_In_ Container other)
 {
 	swap(*this, other);
 
@@ -60,6 +61,20 @@ Container &Container::operator =(Container other)
 void Container::Initialize(_In_ const Registry &registry)
 {
 	registry.Register(*this);
+}
+
+std::vector<RegisteredComponent> Container::GetRegisteredComponents() const
+{
+	std::vector<RegisteredComponent> result;
+
+	for (const std::pair<Lifetimes::Lifetime, std::shared_ptr<IInstanceFactory>> &pair : _factoriesByLifetime)
+	{
+		std::vector<RegisteredComponent> components = pair.second->GetRegisteredComponents();
+
+		result.insert(result.end(), components.cbegin(), components.cend());
+	}
+
+	return result;
 }
 
 void Container::Register(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime)
@@ -139,8 +154,8 @@ void Container::EjectAllInstancesOf(_In_ const std::string &interfaceTypeName)
 {
 	_injectedInstances.erase(interfaceTypeName);
 
-	for (auto iter = _factoriesByLifetime.cbegin(); iter != _factoriesByLifetime.cend(); iter++)
+	for (const auto &item : _factoriesByLifetime)
 	{
-		iter->second->RemoveInstance(interfaceTypeName);
+		item.second->RemoveInstance(interfaceTypeName);
 	}
 }

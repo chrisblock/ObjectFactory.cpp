@@ -90,8 +90,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ClassWithConstContainerDependency.h" />
     <ClInclude Include="ConstructorInjectedImplementation.h" />
     <ClInclude Include="IConstructorInjectedInterface.h" />
+    <ClInclude Include="SimpleRegistry.h" />
     <ClInclude Include="TestImplementation.h" />
     <ClInclude Include="ITestInterface.h" />
     <ClInclude Include="stdafx.h" />
@@ -99,12 +101,19 @@
     <ClInclude Include="TestThread.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClassWithConstContainerDependency.cpp" />
     <ClCompile Include="ConstructorInjectedImplementation.cpp" />
     <ClCompile Include="ConstructorInjectionTests.cpp" />
-    <ClCompile Include="ContainerTests.cpp" />
-    <ClCompile Include="IConstructorInjectedInterface.cpp" />
-    <ClCompile Include="ITestInterface.cpp" />
+    <ClCompile Include="Given_single_node.cpp" />
+    <ClCompile Include="Given_type_that_is_not_registered.cpp" />
+    <ClCompile Include="Given_type_that_is_registered_with_an_interface.cpp" />
+    <ClCompile Include="Given_type_with_both_primitive_and_class_dependency.cpp" />
+    <ClCompile Include="Given_type_with_dependencies.cpp" />
+    <ClCompile Include="Given_type_with_lambda_instantiator.cpp" />
+    <ClCompile Include="Given_type_with_no_dependencies.cpp" />
+    <ClCompile Include="Given_type_with_primitive_dependency.cpp" />
     <ClCompile Include="ObjectFactory.Tests.cpp" />
+    <ClCompile Include="Given_type_with_const_IContainer_dependency.cpp" />
     <ClCompile Include="SingletonInstanceFactoryTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

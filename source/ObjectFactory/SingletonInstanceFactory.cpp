@@ -3,8 +3,10 @@
 #include "SingletonInstanceFactory.h"
 
 #include "IInstantiator.h"
+#include "Lifetimes.h"
+#include "RegisteredComponent.h"
 
-void swap(SingletonInstanceFactory &left, SingletonInstanceFactory &right)
+void swap(_Inout_ SingletonInstanceFactory &left, _Inout_ SingletonInstanceFactory &right)
 {
 	using std::swap;
 
@@ -22,13 +24,13 @@ SingletonInstanceFactory::SingletonInstanceFactory() :
 {
 }
 
-SingletonInstanceFactory::SingletonInstanceFactory(SingletonInstanceFactory &&other) :
+SingletonInstanceFactory::SingletonInstanceFactory(_In_ SingletonInstanceFactory &&other) :
 	  SingletonInstanceFactory()
 {
 	swap(*this, other);
 }
 
-SingletonInstanceFactory::SingletonInstanceFactory(const SingletonInstanceFactory &other)
+SingletonInstanceFactory::SingletonInstanceFactory(_In_ const SingletonInstanceFactory &other)
 {
 	std::lock_guard<std::recursive_mutex> lock(other._mutex);
 
@@ -45,7 +47,7 @@ SingletonInstanceFactory::~SingletonInstanceFactory()
 	_instantiators.clear();
 }
 
-SingletonInstanceFactory &SingletonInstanceFactory::operator = (SingletonInstanceFactory other)
+SingletonInstanceFactory &SingletonInstanceFactory::operator =(_In_ SingletonInstanceFactory other)
 {
 	std::lock_guard<std::recursive_mutex> lock(_mutex);
 
@@ -111,6 +113,20 @@ void SingletonInstanceFactory::Remove(_In_ const std::string &interfaceTypeName)
 
 	_instances.erase(interfaceTypeName);
 	_instantiators.erase(interfaceTypeName);
+}
+
+std::vector<RegisteredComponent> SingletonInstanceFactory::GetRegisteredComponents() const
+{
+	std::vector<RegisteredComponent> result;
+
+	result.reserve(_instantiators.size());
+
+	for (const std::pair<std::string, std::shared_ptr<IInstantiator>> &pair : _instantiators)
+	{
+		result.emplace_back(pair.first, pair.second->GetType(), Lifetimes::GetName(Lifetimes::Singleton));
+	}
+
+	return std::move(result);
 }
 
 int SingletonInstanceFactory::GetNumberOfInstances() const

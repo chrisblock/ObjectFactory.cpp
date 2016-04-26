@@ -1,14 +1,15 @@
 #pragma once
 
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "IContainer.h"
 #include "Lifetimes.h"
 
 class IInstanceFactory;
 class IInstantiator;
+class RegisteredComponent;
 class Registry;
 
 class Container : public IContainer
@@ -26,6 +27,8 @@ public:
 
 	virtual void Initialize(_In_ const Registry &registry) override;
 
+	virtual std::vector<RegisteredComponent> GetRegisteredComponents() const override;
+
 protected:
 	virtual void Register(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &implementationCreator, _In_ const Lifetimes::Lifetime lifetime) override;
 	virtual void Remove(_In_ const std::string &interfaceTypeName);
@@ -34,9 +37,9 @@ protected:
 	virtual void EjectAllInstancesOf(_In_ const std::string &interfaceTypeName) override;
 
 private:
-	std::map<std::string, std::shared_ptr<void>> _injectedInstances;
-	std::map<Lifetimes::Lifetime, std::shared_ptr<IInstanceFactory>> _factoriesByLifetime;
-	std::map<std::string, std::shared_ptr<IInstanceFactory>> _factoriesByTypeName;
+	std::unordered_map<std::string, std::shared_ptr<void>> _injectedInstances;
+	std::unordered_map<Lifetimes::Lifetime, std::shared_ptr<IInstanceFactory>> _factoriesByLifetime;
+	std::unordered_map<std::string, std::shared_ptr<IInstanceFactory>> _factoriesByTypeName;
 };
 
-void swap(Container &left, Container &right);
+void swap(_Inout_ Container &left, _Inout_ Container &right);

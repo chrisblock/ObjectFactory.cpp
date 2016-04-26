@@ -18,7 +18,7 @@ public:
 	};
 };
 
-class ConstructorInjectionTests : public testing::Test
+class ConstructorInjectionTests : public ::testing::Test
 {
 protected:
 	virtual void SetUp() override

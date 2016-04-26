@@ -3,6 +3,8 @@
 #include "TransientInstanceFactory.h"
 
 #include "IInstantiator.h"
+#include "Lifetimes.h"
+#include "RegisteredComponent.h"
 
 void swap(TransientInstanceFactory &left, TransientInstanceFactory &right)
 {
@@ -76,4 +78,18 @@ void TransientInstanceFactory::RemoveInstance(_In_ const std::string &)
 void TransientInstanceFactory::Remove(_In_ const std::string &interfaceTypeName)
 {
 	_instantiators.erase(interfaceTypeName);
+}
+
+std::vector<RegisteredComponent> TransientInstanceFactory::GetRegisteredComponents() const
+{
+	std::vector<RegisteredComponent> result;
+
+	result.reserve(_instantiators.size());
+
+	for (const std::pair<std::string, std::shared_ptr<IInstantiator>> &pair : _instantiators)
+	{
+		result.emplace_back(pair.first, pair.second->GetType(), Lifetimes::GetName(Lifetimes::Transient));
+	}
+
+	return result;
 }

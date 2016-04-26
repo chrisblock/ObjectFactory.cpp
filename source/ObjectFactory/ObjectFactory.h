@@ -11,6 +11,10 @@ class ObjectFactory
 public:
 	ObjectFactory() = delete;
 	ObjectFactory(const ObjectFactory &other) = delete;
+	ObjectFactory(ObjectFactory &&other) = delete;
+	~ObjectFactory() = delete;
+
+	ObjectFactory &operator =(ObjectFactory other) = delete;
 
 	static void Initialize(_In_ const Registry &registry);
 	static void Clear();

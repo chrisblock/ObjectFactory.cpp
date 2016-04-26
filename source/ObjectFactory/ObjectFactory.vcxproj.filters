@@ -22,6 +22,9 @@
     <Filter Include="Lifetimes">
       <UniqueIdentifier>{170ca78a-7373-4a7a-9e15-72de6dabf672}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{b6167200-511f-4e7e-bde5-3c66c4b1ba94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lifetimes.h">
@@ -62,13 +65,16 @@
     <ClInclude Include="LambdaInstantiator.h">
       <Filter>Instantiator\Impl</Filter>
     </ClInclude>
+    <ClInclude Include="DependencyGraphNode.h">
+      <Filter>Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisteredComponent.h">
+      <Filter>Dependencies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Lifetimes.cpp">
       <Filter>Lifetimes</Filter>
-    </ClCompile>
-    <ClCompile Include="IInstanceFactory.cpp">
-      <Filter>InstanceFactories</Filter>
     </ClCompile>
     <ClCompile Include="TransientInstanceFactory.cpp">
       <Filter>InstanceFactories\Impl</Filter>
@@ -76,29 +82,19 @@
     <ClCompile Include="SingletonInstanceFactory.cpp">
       <Filter>InstanceFactories\Impl</Filter>
     </ClCompile>
-    <ClCompile Include="IContainer.cpp">
-      <Filter>Containers</Filter>
-    </ClCompile>
     <ClCompile Include="Container.cpp">
       <Filter>Containers\Impl</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="IInstantiator.cpp">
-      <Filter>Instantiator</Filter>
-    </ClCompile>
-    <ClCompile Include="InstantiatorFactory.cpp">
-      <Filter>Instantiator</Filter>
-    </ClCompile>
     <ClCompile Include="ThreadScopeInstanceFactory.cpp">
       <Filter>InstanceFactories\Impl</Filter>
     </ClCompile>
     <ClCompile Include="ObjectFactory.cpp" />
-    <ClCompile Include="Registry.cpp" />
-    <ClCompile Include="VariadicArgumentInstantiator.cpp">
-      <Filter>Instantiator\Impl</Filter>
+    <ClCompile Include="DependencyGraphNode.cpp">
+      <Filter>Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="LambdaInstantiator.cpp">
-      <Filter>Instantiator\Impl</Filter>
+    <ClCompile Include="RegisteredComponent.cpp">
+      <Filter>Dependencies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

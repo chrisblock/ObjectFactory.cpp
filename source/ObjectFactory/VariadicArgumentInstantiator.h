@@ -17,9 +17,10 @@ public:
 		other;
 	};
 
-	VariadicArgumentInstantiator(VariadicArgumentInstantiator &&other)
+	VariadicArgumentInstantiator(VariadicArgumentInstantiator &&other) :
+		  VariadicArgumentInstantiator()
 	{
-		other;
+		swap(*this, other);
 	};
 
 	virtual ~VariadicArgumentInstantiator()
@@ -28,9 +29,27 @@ public:
 
 	VariadicArgumentInstantiator &operator =(VariadicArgumentInstantiator other)
 	{
-		other;
+		swap(*this, other);
 
-		return &this;
+		return *this;
+	};
+
+	friend void swap(VariadicArgumentInstantiator &left, VariadicArgumentInstantiator &right)
+	{
+		using std::swap;
+
+		left;
+		right;
+	};
+
+	virtual std::string GetType() const override
+	{
+		return typeid (TResult).name();
+	};
+
+	virtual std::vector<std::string> GetDependencies() const override
+	{
+		return { typeid (TArgs).name()... };
 	};
 
 	virtual std::shared_ptr<void> CreateInstance(const IContainer &container) const override

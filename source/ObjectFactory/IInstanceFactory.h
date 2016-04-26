@@ -5,11 +5,12 @@
 
 class IContainer;
 class IInstantiator;
+class RegisteredComponent;
 
 class IInstanceFactory
 {
 public:
-	virtual ~IInstanceFactory();
+	virtual ~IInstanceFactory() = default;
 
 	virtual void SetCreationStrategy(_In_ const std::string &interfaceTypeName, _In_ const std::shared_ptr<IInstantiator> &instantiator) = 0;
 
@@ -18,4 +19,6 @@ public:
 	virtual void RemoveInstance(_In_ const std::string &interfaceTypeName) = 0;
 
 	virtual void Remove(_In_ const std::string &interfaceTypeName) = 0;
+
+	virtual std::vector<RegisteredComponent> GetRegisteredComponents() const = 0;
 };
